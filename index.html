@@ -5,21 +5,53 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Maia Chambers – Data Science Portfolio</title>
   <style>
-    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin: 2rem; line-height: 1.5; }
-    h1 { margin-bottom: .25rem; }
-    ul { padding-left: 1.25rem; }
-    a { text-decoration: none; }
+    body { 
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+      margin: 2rem; 
+      line-height: 1.5; 
+      background: #f9fafb;
+      color: #111;
+    }
+    h1 { font-size: 2rem; margin-bottom: .5rem; }
+    h2 { margin-top: 2rem; font-size: 1.25rem; }
+    .grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 1.5rem; 
+      margin-top: 1rem;
+    }
+    .card { 
+      background: white; 
+      border-radius: 12px; 
+      padding: 1rem 1.25rem; 
+      box-shadow: 0 2px 8px rgba(0,0,0,.08); 
+      transition: transform .2s ease;
+    }
+    .card:hover { transform: translateY(-4px); }
+    .card h3 { margin: 0 0 .5rem; }
+    a { color: #2563eb; text-decoration: none; font-weight: 500; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
-  <h1>Data Science Portfolio</h1>
+  <h1>Maia Chambers – Data Science Portfolio</h1>
   <p>Quarto + Python (pandas) + SQL projects</p>
+
   <h2>Projects</h2>
-  <ul>
-    <li><a href="P2_template.html">Project: Finding Relationships in Baseball</a></li>
-    <li><a href="P3_template.html">Project: Flight Delay Analysis</a></li>
-    <li><a href="P5_template.html">Project 5 Report</a></li>
-    <!-- Add more links as needed, matching exact filenames -->
-  </ul>
+  <div class="grid">
+    <div class="card">
+      <h3><a href="P2_template.html">Finding Relationships in Baseball</a></h3>
+      <p>Explored baseball performance data using SQL + Quarto to uncover player and game insights.</p>
+    </div>
+    <div class="card">
+      <h3><a href="P3_template.html">Flight Delay Analysis</a></h3>
+      <p>Analyzed flight delay trends using pandas; identified key factors affecting on-time performance.</p>
+    </div>
+    <div class="card">
+      <h3><a href="P5_template.html">Project 5 Report</a></h3>
+      <p>Full Quarto report with statistical analysis and data visualization.</p>
+    </div>
+    <!-- Add more projects here -->
+  </div>
 </body>
 </html>
