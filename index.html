@@ -5,53 +5,71 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Maia Chambers – Data Science Portfolio</title>
   <style>
-    body { 
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
-      margin: 2rem; 
-      line-height: 1.5; 
-      background: #f9fafb;
-      color: #111;
+    :root { --bg:#f9fafb; --fg:#111; --card:#fff; --link:#2563eb; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      margin: 2rem auto;
+      max-width: 1100px;
+      padding: 0 1rem;
+      line-height: 1.6;
+      background: var(--bg);
+      color: var(--fg);
     }
-    h1 { font-size: 2rem; margin-bottom: .5rem; }
-    h2 { margin-top: 2rem; font-size: 1.25rem; }
-    .grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-      gap: 1.5rem; 
-      margin-top: 1rem;
+    h1 { font-size: 2rem; margin: 0 0 .5rem; }
+    h2 { margin: 2rem 0 1rem; font-size: 1.25rem; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: .5rem;
     }
-    .card { 
-      background: white; 
-      border-radius: 12px; 
-      padding: 1rem 1.25rem; 
-      box-shadow: 0 2px 8px rgba(0,0,0,.08); 
-      transition: transform .2s ease;
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      transition: transform .2s ease, box-shadow .2s ease;
     }
-    .card:hover { transform: translateY(-4px); }
-    .card h3 { margin: 0 0 .5rem; }
-    a { color: #2563eb; text-decoration: none; font-weight: 500; }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,.12); }
+    .card h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
+    .card p { margin: 0; font-size: .95rem; }
+    a { color: var(--link); text-decoration: none; font-weight: 600; }
     a:hover { text-decoration: underline; }
+    .sub { margin: .25rem 0 1rem; color: #374151; }
+    footer { margin: 3rem 0 1rem; font-size: .9rem; color: #6b7280; }
+    footer a { font-weight: 500; }
   </style>
 </head>
 <body>
-  <h1>Maia Chambers – Data Science Portfolio</h1>
-  <p>Quarto + Python (pandas) + SQL projects</p>
+  <header>
+    <h1>Maia Chambers – Data Science Portfolio</h1>
+    <p class="sub">Quarto + Python (pandas) + SQL projects</p>
+  </header>
 
   <h2>Projects</h2>
   <div class="grid">
     <div class="card">
-      <h3><a href="P2_template.html">Finding Relationships in Baseball</a></h3>
-      <p>Explored baseball performance data using SQL + Quarto to uncover player and game insights.</p>
+      <h3><a href="P2_template.html" target="_blank" rel="noopener">Finding Relationships in Baseball</a></h3>
+      <p>Explored baseball performance using SQL + Quarto; surfaced player/game insights.</p>
     </div>
     <div class="card">
-      <h3><a href="P3_template.html">Flight Delay Analysis</a></h3>
-      <p>Analyzed flight delay trends using pandas; identified key factors affecting on-time performance.</p>
+      <h3><a href="P3_template.html" target="_blank" rel="noopener">Flight Delay Analysis</a></h3>
+      <p>pandas-based analysis of delay drivers; trends and contributing factors.</p>
     </div>
     <div class="card">
-      <h3><a href="P5_template.html">Project 5 Report</a></h3>
-      <p>Full Quarto report with statistical analysis and data visualization.</p>
+      <h3><a href="P5_template.html" target="_blank" rel="noopener">Project 5 Report</a></h3>
+      <p>Full Quarto report with statistical analysis and visualization.</p>
     </div>
-    <!-- Add more projects here -->
+    <!-- Duplicate a card block and adjust link/title/desc to add more projects -->
   </div>
+
+  <footer>
+    <p>
+      More work on <a href="https://github.com/MFChambers/PortfolioDataScience" target="_blank" rel="noopener">GitHub</a>.
+      Contact: <a href="mailto:yupitsmaia@gmail.com">yupitsmaia@gmail.com</a>
+    </p>
+  </footer>
 </body>
 </html>
+
