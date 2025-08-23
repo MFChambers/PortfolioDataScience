@@ -1,0 +1,196 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Coding Challenge - DS 250\"\n",
+        "subtitle: \"Timed Quiz: Q1–Q4\"\n",
+        "author: \"Maia Faith Chambers\"\n",
+        "format:\n",
+        "  html:\n",
+        "    self-contained: true\n",
+        "    toc: true\n",
+        "    toc-depth: 2\n",
+        "    title-block-banner: true\n",
+        "    code-fold: true\n",
+        "    code-summary: \"Show Code\"\n",
+        "    code-tools:\n",
+        "      toggle: true\n",
+        "      caption: See Code\n",
+        "execute:\n",
+        "  kernel: python312\n",
+        "  warning: false\n",
+        "---"
+      ],
+      "id": "a17d9820"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import sys\n",
+        "print(sys.executable)"
+      ],
+      "id": "4cbff519",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Imports (reuse from project)\n",
+        "import pandas as pd\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "import seaborn as sns\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.metrics import accuracy_score\n",
+        "\n",
+        "# Styling\n",
+        "sns.set(style=\"whitegrid\")\n",
+        "\n",
+        "# Load dataset (adjust file path if needed)\n",
+        "names = pd.read_csv(\"names_year.csv\")  # Or whatever name is given"
+      ],
+      "id": "fa71f5d4",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Plot\n",
+        "plt.figure(figsize=(10,6))\n",
+        "sns.lineplot(data=names, x=\"year\", y=\"n\", hue=\"name\")\n",
+        "plt.title(\"Name Popularity Over Time\")\n",
+        "plt.xlabel(\"Year\")\n",
+        "plt.ylabel(\"Number of Babies\")\n",
+        "plt.axvline(2000, color='gray', linestyle='--')\n",
+        "plt.text(2001, names['n'].max() * 0.8, \"Millennium\", rotation=90)\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "2cdc690a",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "problem = pd.Series([np.nan, 18, 22, 45, 31, np.nan, 85, 38, 129, 8000, 22, 2])\n",
+        "std_val = problem.std()\n",
+        "filled = problem.fillna(std_val)\n",
+        "result = round(filled.mean(), 2)\n",
+        "print(\"Final Mean:\", result)"
+      ],
+      "id": "fc7dbb38",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "ages = pd.Series([\"10-25\", \"10-25\", \"26-35\", \"56-85\", \"0-9\", \"46-55\",\n",
+        "                  \"56-85\", \"0-9\", \"26-35\", \"56-85\", \"0-9\", \"10-25\"])\n",
+        "age_df = ages.value_counts().reset_index()\n",
+        "age_df.columns = [\"Age Range\", \"Count\"]\n",
+        "\n",
+        "plt.figure(figsize=(8,5))\n",
+        "sns.barplot(data=age_df, x=\"Age Range\", y=\"Count\", order=sorted(age_df[\"Age Range\"]))\n",
+        "plt.title(\"Age Range Frequency\")\n",
+        "plt.xlabel(\"Age Range\")\n",
+        "plt.ylabel(\"Count\")\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "fa4031b1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Load cleaned Star Wars dataset\n",
+        "df = pd.read_csv(\"star_wars_clean.csv\")\n",
+        "df = df.dropna()\n",
+        "y = df[\"female\"]\n",
+        "X = pd.get_dummies(df.drop(columns=[\"female\"]))\n",
+        "\n",
+        "# Split and Train\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=2022)\n",
+        "model = RandomForestClassifier(random_state=2022)\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Accuracy\n",
+        "acc = accuracy_score(y_test, model.predict(X_test))\n",
+        "print(f\"Accuracy: {acc:.2%}\")\n",
+        "\n",
+        "# Feature Importance Plot\n",
+        "importances = pd.Series(model.feature_importances_, index=X.columns)\n",
+        "top10 = importances.nlargest(10).reset_index()\n",
+        "top10.columns = [\"Feature\", \"Importance\"]\n",
+        "\n",
+        "plt.figure(figsize=(8,5))\n",
+        "sns.barplot(data=top10, x=\"Importance\", y=\"Feature\", palette=\"viridis\")\n",
+        "plt.title(\"Top 10 Important Features\")\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "28f37b30",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Load cleaned Star Wars dataset\n",
+        "df = pd.read_csv(\"star_wars_clean.csv\")\n",
+        "df = df.dropna()\n",
+        "y = df[\"female\"]\n",
+        "X = pd.get_dummies(df.drop(columns=[\"female\"]))\n",
+        "\n",
+        "# Split and Train\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=2022)\n",
+        "model = RandomForestClassifier(random_state=2022)\n",
+        "model.fit(X_train, y_train)\n",
+        "\n",
+        "# Accuracy\n",
+        "acc = accuracy_score(y_test, model.predict(X_test))\n",
+        "print(f\"Accuracy: {acc:.2%}\")\n",
+        "\n",
+        "# Feature Importance Plot\n",
+        "importances = pd.Series(model.feature_importances_, index=X.columns)\n",
+        "top10 = importances.nlargest(10).reset_index()\n",
+        "top10.columns = [\"Feature\", \"Importance\"]\n",
+        "\n",
+        "plt.figure(figsize=(8,5))\n",
+        "sns.barplot(data=top10, x=\"Importance\", y=\"Feature\", palette=\"viridis\")\n",
+        "plt.title(\"Top 10 Important Features\")\n",
+        "plt.tight_layout()\n",
+        "plt.show()"
+      ],
+      "id": "6f543b96",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python312",
+      "language": "python",
+      "display_name": "Python 3.12 (correct)",
+      "path": "/Users/maiafaith/Library/Jupyter/kernels/python312"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

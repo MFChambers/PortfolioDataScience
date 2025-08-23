@@ -1,0 +1,67 @@
+```{python}
+# %%
+# Read in libraries
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html(isolated_frame=True)
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+df = pd.read_csv("https://github.com/byuidatascience/data4dwellings/raw/master/data-raw/dwellings_ml/dwellings_ml.csv")
+```
+
+
+```{python}
+
+# Use the train_test_split() functions with a test_size of .34 and a random_state of 76 to create your testing and training data using dwellings_ml. What is the average of the first 10 values in your testing y values?
+from sklearn.model_selection import train_test_split
+
+# define features
+X = df.drop(columns=['before1980', 'parcel'])
+X = X.fillna(0)
+
+# define target
+y = df['before1980']
+
+# split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.34, random_state=76
+)
+
+# get average of first 10 test values
+avg_first10 = y_test.iloc[:10].mean()
+print(f"Average of first 10 y_test values: {avg_first10}")
+```
+
+
+```{python}
+#Use the train_test_split() functions with a test_size of .34 and a random_state of 76 to create your testing and training data using dwellings_ml. What is the average of the first 10 values in your training X values for the selling price sprice?
+
+from sklearn.model_selection import train_test_split
+
+# define X and y
+X = df.drop(columns=['before1980', 'parcel'])
+y = df['before1980']
+
+# handle missing values
+X = X.fillna(0)
+
+# split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.34, random_state=76
+)
+
+# get the average of the first 10 X_train sprice values
+avg_first10_sprice = X_train['sprice'].iloc[:10].mean()
+print(f"Average of first 10 X_train sprice values: {avg_first10_sprice:.2f}")
+```
+
+```{python}
+# Complex packages like scikit-learn have many submodules. If we only want the train_test_split() function for our use, which command is the best option for clarity?
+
+ from sklearn.model_selection import train_test_split 
+
+# Now we want to have the metrics submoduleLinks to an external site. available to us from sklearn. What is the proper statement we should include at the top of our Python script?
+
+ from sklearn import metrics
+ ```

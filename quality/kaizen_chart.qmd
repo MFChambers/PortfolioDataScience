@@ -1,0 +1,123 @@
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.set(style="whitegrid")
+
+# Before data (all 0s)
+data = {
+    "Book": ["Old Testament", "New Testament", "Book of Mormon", "Pearl of Great Price", "D & C"],
+    "Verses Read": [0, 0, 0, 0, 0],
+    "Chapters Read": [0, 0, 0, 0, 0]
+}
+
+df = pd.DataFrame(data)
+df_melted = df.melt(id_vars="Book", var_name="Reading Type", value_name="Count")
+
+# Create the bar plot
+plt.figure(figsize=(12, 7))
+ax = sns.barplot(
+    data=df_melted,
+    x="Count",
+    y="Book",
+    hue="Reading Type",
+    palette="Set2"
+)
+
+# Set larger fonts for clarity
+plt.title("Daily Scripture Reading Over 27 Days", fontsize=22, fontweight='bold')
+plt.xlabel("Reading Activity Level", fontsize=18)
+plt.ylabel("Scripture Book", fontsize=18)
+
+# Increase tick label size
+ax.tick_params(axis='x', labelsize=16)
+ax.tick_params(axis='y', labelsize=16)
+
+# Slightly larger legend text
+plt.legend(title="Reading Type", title_fontsize=17, fontsize=15)
+
+# Add value labels to real bars only
+for p in ax.patches:
+    value = int(p.get_width())
+    height = p.get_height()
+
+    # Only label real visible bars (width 0 is still valid for labeling 0, but height must exist)
+    if height > 0 and p.get_y() is not None:
+        if value > 0:
+            ax.text(p.get_width() + 1,
+                    p.get_y() + height / 2,
+                    str(value),
+                    va='center', fontsize=13)
+        else:
+            # Show a '0' label slightly offset
+            ax.text(1,  # Place slightly into bar area
+                    p.get_y() + height / 2,
+                    '0',
+                    va='center', fontsize=13, color='gray')
+
+# Set x-axis limit for better layout (optional: adjust as needed)
+plt.xlim(0, 200)
+
+plt.tight_layout()
+plt.show()
+```
+
+```
+
+```{python}
+# AFTER CHART WITH LABELS
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Set style
+sns.set(style="whitegrid")
+
+# After data
+data = {
+    "Book": ["Old Testament", "New Testament", "Book of Mormon", "Pearl of Great Price", "D & C"],
+    "Verses Read": [75, 38, 150, 72, 15],
+    "Chapters Read": [3, 2, 6, 4, 1]
+}
+
+df = pd.DataFrame(data)
+df_melted = df.melt(id_vars="Book", var_name="Reading Type", value_name="Count")
+
+# Create the bar plot
+plt.figure(figsize=(12, 7))
+ax = sns.barplot(
+    data=df_melted,
+    x="Count",
+    y="Book",
+    hue="Reading Type",
+    palette="Set2"
+)
+
+# Set larger fonts for clarity
+plt.title("Daily Scripture Reading Over 27 Days", fontsize=22, fontweight='bold')
+plt.xlabel("Reading Activity Level", fontsize=18)
+plt.ylabel("Scripture Book", fontsize=18)
+
+# Increase tick label size
+ax.tick_params(axis='x', labelsize=16)
+ax.tick_params(axis='y', labelsize=16)
+
+# Slightly larger legend text
+plt.legend(title="Reading Type", title_fontsize=17, fontsize=15)
+
+# Add value labels only for values > 0
+for p in ax.patches:
+    value = int(p.get_width())
+    if value > 0:
+        ax.text(p.get_width() + 1,
+                p.get_y() + p.get_height() / 2,
+                str(value),
+                va='center', fontsize=18)
+
+# Set x-axis limit for better layout (optional: adjust as needed)
+plt.xlim(0, 200)
+
+plt.tight_layout()
+plt.show()
+```

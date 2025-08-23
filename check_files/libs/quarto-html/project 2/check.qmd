@@ -1,0 +1,47 @@
+```{python}
+# %%
+import sqlite3
+import pandas as pd
+
+# ✅ Use the correct filename
+sqlite_file = 'lahmansbaseballdb.sqlite'
+
+# ✅ Connect to the SQLite database
+con = sqlite3.connect(sqlite_file)
+
+# ✅ Question 1: Get first 2 rows from batting table
+q = '''
+SELECT * FROM batting
+LIMIT 2;
+'''
+qr = pd.read_sql_query(q, con)
+print("First 2 rows of batting table:\n", qr)
+
+# ✅ Question 1 continued: How many at-bats did addybo01 have?
+q = '''
+SELECT playerID, yearID, AB
+FROM batting
+WHERE playerID = 'addybo01';
+'''
+qr = pd.read_sql_query(q, con)
+print("\nAt-bats for addybo01:\n", qr)
+
+total_ab = qr['AB'].sum()
+print("\n✅ Total at-bats for addybo01:", total_ab)
+
+# ✅ Question 2: Batting average for 1871
+q = '''
+SELECT playerID, yearID, AB, H
+FROM batting
+WHERE playerID = 'addybo01' AND yearID = 1871;
+'''
+qr = pd.read_sql_query(q, con)
+print("\n1871 stats for addybo01:\n", qr)
+
+batting_avg = round(qr['H'][0] / qr['AB'][0], 3)
+print("✅ Batting average for 1871:", batting_avg)
+
+# ✅ Close the connection
+con.close()
+
+```

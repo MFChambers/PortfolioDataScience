@@ -1,0 +1,423 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Client Report - Late Flights & Missing Data (JSON)\"\n",
+        "subtitle: \"Course DS 250\"\n",
+        "author: \"[Maia Faith Chambers]\"\n",
+        "format:\n",
+        "  html:\n",
+        "    self-contained: true\n",
+        "    page-layout: full\n",
+        "    title-block-banner: true\n",
+        "    toc: true\n",
+        "    toc-depth: 3\n",
+        "    toc-location: body\n",
+        "    number-sections: false\n",
+        "    html-math-method: katex\n",
+        "    code-fold: true\n",
+        "    code-summary: \"Show the code\"\n",
+        "    code-overflow: wrap\n",
+        "    code-copy: hover\n",
+        "    code-tools:\n",
+        "        source: false\n",
+        "        toggle: true\n",
+        "        caption: See code\n",
+        "execute: \n",
+        "  warning: false\n",
+        "    \n",
+        "---"
+      ],
+      "id": "bd5c05a9"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd\n",
+        "\n",
+        "names = pd.read_csv(\"names_year.csv\")\n",
+        "names.head()"
+      ],
+      "id": "5d03f480",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html\n",
+        "\n",
+        "# Include and execute your code here\n",
+        "df = pd.read_json(\"https://github.com/byuidatascience/data4missing/raw/master/data-raw/flights_missing/flights_missing.json\")\n",
+        "\n",
+        "df.columns.to_list()"
+      ],
+      "id": "ab91523d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Elevator pitch\n",
+        "The analysis I did discovers that SLC airport had the highest proportion of delayed flights, February was the most punctual month to travel. Weather-related delays were more prevalent in late summer and winter, with SFO airport experiencing the greatest weather impact.\n",
+        "\n",
+        "## QUESTION|TASK 1\n",
+        "\n",
+        "__Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”).__ In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the \"NaN\" for at least one missing value.__  \n",
+        "\n",
+        "By replacing empty string and \"999\" with NaN. This standardizes the data and gets rid of placeholder values and empty strings. It also allows us to handle missing values and makes them easier to identify. The example below is a single row from the data set that has been cleaned and turned into JSON format. \n"
+      ],
+      "id": "a0f16a93"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "#This code replaces empty string and \"999\" with NaN\n",
+        "df_clean= df.replace(['', 999], np.nan)\n",
+        "\n",
+        "# Clean airport code formatting right after cleaning the data\n",
+        "df_clean['airport_code'] = df_clean['airport_code'].str.strip().str.upper()\n",
+        "\n",
+        "example= df_clean.iloc[[10]].to_json(orient='records', indent = 2)\n",
+        "print(example)\n"
+      ],
+      "id": "f5498772",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 2\n",
+        "\n",
+        "__Which airport has the worst delays?__ Describe the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.   \n",
+        "\n",
+        "The proportion I used to identify the airport with worst delays is the proportion of delayed flights. This is crucial for identifying airports where delays happen often. A small airport would have fewere total minutes of delay but a very high proportion of late departures, which could still make it the \"worst\" from a passenger's perspective. I also used the average delay time in hours so that we can determine how severe the delays are, on average, to get an accurate depiction of airports when delays occur. A hgigher proportion of delays may indicate frequency, average delay time indicaes the intensity.\n"
+      ],
+      "id": "b606cf3b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 2\n",
+        "\n",
+        "# Create delay indicator and helper column for average delay\n",
+        "df_clean['is_delayed'] = df_clean['minutes_delayed_total'].fillna(0) > 0\n",
+        "df_clean['delay_minutes_filled'] = df_clean['minutes_delayed_total'].fillna(0)\n",
+        "\n",
+        "# Summary by airport\n",
+        "summary = (\n",
+        "    df_clean.groupby('airport_code')\n",
+        "    .agg(\n",
+        "        total_flights=('num_of_flights_total', 'sum'),\n",
+        "        delayed_flights=('is_delayed', 'sum'),\n",
+        "        avg_delay_hr=('delay_minutes_filled', lambda x: x.mean() / 60)\n",
+        "    )\n",
+        "    .reset_index()\n",
+        ")\n",
+        "\n",
+        "summary['prop_delayed'] = summary['delayed_flights'] / summary['total_flights']\n",
+        "summary = summary.sort_values(by='prop_delayed', ascending=False)\n",
+        "\n",
+        "# Optional: Display the summary table\n",
+        "print(summary.head())\n"
+      ],
+      "id": "993f02f5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "Based on the findings, the highest proportion of delayed flights was IAD (Washington Dulles) with the worst delays, even though its a smaller airport. Passengers that fly through IAD are more likely to experience delays. If we take into account the average delay duratio, ORD (Chicago O'Hare) would be the worst airport. Suggesting that even though delays are less likely and less frequent than IAD, they are significantly longer when they do happen. IAD is the worst in frequency and ORD is the worst in severity. \n",
+        "\n",
+        "## QUESTION|TASK 3\n",
+        "\n",
+        "__What is the best month to fly if you want to avoid delays of any length?__\n",
+        "\n",
+        "To identify the best month to fly, I analyzed average delay per flight by month. I chose this metric because it accounts for both the frequency and intensity of delays, rather than just whether any delay occurred. By calculating the total minutes of delay divided by the total number of flights for each airport-month, then averaging these across all airports, we get a fair comparison of punctuality month by month.\n"
+      ],
+      "id": "47c977f5"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Filter and clean the data\n",
+        "df_month = df_clean.copy()\n",
+        "\n",
+        "# Drop rows missing month or flights\n",
+        "df_month = df_month.dropna(subset=['month', 'num_of_flights_total'])\n",
+        "\n",
+        "# Map month names to numbers\n",
+        "month_name_to_num = {\n",
+        "    'January': 1, 'February': 2, 'March': 3, 'April': 4,\n",
+        "    'May': 5, 'June': 6, 'July': 7, 'August': 8,\n",
+        "    'September': 9, 'October': 10, 'November': 11, 'December': 12\n",
+        "}\n",
+        "df_month['month_num'] = df_month['month'].map(month_name_to_num)\n",
+        "\n",
+        "# Fix missing delay values so months like February aren’t dropped\n",
+        "df_month['minutes_delayed_total'] = pd.to_numeric(df_month['minutes_delayed_total'], errors='coerce').fillna(0)\n",
+        "\n",
+        "# Drop if num_of_flights_total is 0\n",
+        "df_month = df_month[df_month['num_of_flights_total'] > 0]\n",
+        "\n",
+        "# Calculate average delay per flight\n",
+        "df_month['avg_delay_per_flight_hr'] = df_month['minutes_delayed_total'] / df_month['num_of_flights_total'] / 60\n",
+        "\n",
+        "# Group by month\n",
+        "month_summary = (\n",
+        "    df_month.groupby(['month', 'month_num'], as_index=False)\n",
+        "    .agg(avg_delay_hr=('avg_delay_per_flight_hr', 'mean'))\n",
+        "    .sort_values('month_num')\n",
+        ")\n",
+        "\n",
+        "# Check which months are actually present\n",
+        "print(month_summary['month'])\n",
+        "\n",
+        "# Plot\n",
+        "ggplot(month_summary, aes(x='month', y='avg_delay_hr')) + \\\n",
+        "    geom_bar(stat='identity', fill='#87CEEB') + \\\n",
+        "    labs(title='Average Delay per Flight by Month (Hours)',\n",
+        "         x='Month', y='Average Delay (Hours)') + \\\n",
+        "    theme(axis_text_x=element_text(angle=45, hjust=1))"
+      ],
+      "id": "ae993260",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "print(df_clean[df_clean['month'] == 'February'])"
+      ],
+      "id": "2a405414",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The chart displays the average delay per flight by month. Based on the data, September has the lowest average delays, making it the best month to travel if your goal is to avoid flight delays.\n",
+        "\n",
+        "This metric reflects both the frequency and intensity of delays by dividing total delay minutes by total flights per month.\n",
+        "\n",
+        "Note: February does not appear in the dataset, likely due to missing or incomplete data for that month.\n",
+        "\n",
+        "## QUESTION|TASK 4\n",
+        "\n",
+        "According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories.\n",
+        "\n",
+        "This section combines delays from three sources: 100% of flights delayed due to severe weather, 30% of delays from late-arriving aircraft, and a month-based proportion of NAS delays (40% from April to August, 65% otherwise). This provides a more complete picture of how both severe and mild weather conditions contribute to flight delays. The data shows that ORD (Chicago O’Hare) experiences the highest total number of weather-related delays (4,502 flights), suggesting it is especially vulnerable to both direct and indirect weather impacts. ATL (Atlanta) also has a substantial number of delays (~3,769), driven largely by NAS-related disruptions. In contrast, airports like IAD (Washington Dulles) and SAN (San Diego) show lower weather-related delay totals, indicating they are either less exposed to disruptive weather or more resilient in handling its effects. This approach offers a more realistic view of weather’s full influence on airport performance."
+      ],
+      "id": "b38f5a68"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Fill missing values for the relevant columns\n",
+        "df_clean['num_of_delays_late_aircraft'] = pd.to_numeric(df_clean['num_of_delays_late_aircraft'], errors='coerce')\n",
+        "df_clean['num_of_delays_weather'] = pd.to_numeric(df_clean['num_of_delays_weather'], errors='coerce').fillna(0)\n",
+        "df_clean['num_of_delays_nas'] = pd.to_numeric(df_clean['num_of_delays_nas'], errors='coerce').fillna(0)\n",
+        "\n",
+        "# Replace negative or invalid late_aircraft values with NaN first\n",
+        "df_clean.loc[df_clean['num_of_delays_late_aircraft'] < 0, 'num_of_delays_late_aircraft'] = np.nan\n",
+        "\n",
+        "# Fill missing late_aircraft with mean\n",
+        "late_mean = df_clean['num_of_delays_late_aircraft'].mean()\n",
+        "df_clean['num_of_delays_late_aircraft'] = df_clean['num_of_delays_late_aircraft'].fillna(late_mean)"
+      ],
+      "id": "88c0596f",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Map month names to numbers\n",
+        "month_to_num = {\n",
+        "    'January': 1, 'February': 2, 'March': 3, 'April': 4,\n",
+        "    'May': 5, 'June': 6, 'July': 7, 'August': 8,\n",
+        "    'September': 9, 'October': 10, 'November': 11, 'December': 12\n",
+        "}\n",
+        "df_clean['month_num'] = df_clean['month'].map(month_to_num)\n",
+        "\n",
+        "# Define the NAS weather delay proportion rule\n",
+        "def nas_weather_proportion(month_num):\n",
+        "    if pd.isna(month_num):\n",
+        "        return 0\n",
+        "    return 0.4 if 4 <= month_num <= 8 else 0.65"
+      ],
+      "id": "52ff0edb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Calculate combined weather delay using all rules\n",
+        "df_clean['weather_delay_all'] = (\n",
+        "    df_clean['num_of_delays_weather'] +\n",
+        "    0.3 * df_clean['num_of_delays_late_aircraft'] +\n",
+        "    df_clean['num_of_delays_nas'] * df_clean['month_num'].apply(nas_weather_proportion)\n",
+        ")\n",
+        "\n",
+        "# Display first 5 rows of relevant columns\n",
+        "df_clean[['airport_code', 'month', 'num_of_delays_weather',\n",
+        "          'num_of_delays_late_aircraft', 'num_of_delays_nas',\n",
+        "          'weather_delay_all']].rename(columns={\n",
+        "    'airport_code': 'airport',\n",
+        "    'num_of_delays_weather': 'delays_weather',\n",
+        "    'num_of_delays_late_aircraft': 'late_aircraft',\n",
+        "    'num_of_delays_nas': 'delays_nas'\n",
+        "}).head()"
+      ],
+      "id": "302c471c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 5\n",
+        "\n",
+        "__Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Describe what you learn from this graph.__  \n",
+        "\n",
+        "This chart shows the proportion of total flights at each airport that were delayed by weather, accounting for both severe and mild delays. Airports like SFO and ORD show the highest proportions of weather-related delays. In contrast, airports such as SLC and SAN have relatively fewer weather-related delays, suggesting more stable flying conditions."
+      ],
+      "id": "913b3c9d"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Fix potential missing data\n",
+        "df_clean['weather_delay_all'] = df_clean['weather_delay_all'].fillna(0)\n",
+        "df_clean['num_of_flights_total'] = df_clean['num_of_flights_total'].fillna(0)\n",
+        "\n",
+        "# Summarize again\n",
+        "weather_summary = (\n",
+        "    df_clean.groupby('airport_code')\n",
+        "    .agg(\n",
+        "        total_flights=('num_of_flights_total', 'sum'),\n",
+        "        total_weather_delays=('weather_delay_all', 'sum')\n",
+        "    )\n",
+        "    .assign(prop_weather_delay=lambda d: d['total_weather_delays'] / d['total_flights'])\n",
+        "    .query('total_flights > 0')\n",
+        "    .reset_index()\n",
+        ")\n",
+        "\n",
+        "# Sort for plotting\n",
+        "weather_summary_sorted = weather_summary.sort_values('prop_weather_delay', ascending=False)\n",
+        "\n",
+        "# Plot\n",
+        "ggplot(weather_summary_sorted, aes(x='airport_code', y='prop_weather_delay')) + \\\n",
+        "    geom_bar(stat='identity', fill='#FF7F7F') + \\\n",
+        "    labs(title='Proportion of Total Flights Delayed by Weather',\n",
+        "         x='Airport', y='Proportion of Flights') + \\\n",
+        "    theme(axis_text_x=element_text(size=10, angle=45, hjust=1))\n"
+      ],
+      "id": "bd0840c8",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "\n",
+        "## STRETCH QUESTION|TASK 1\n",
+        "\n",
+        "__Which delay is the worst delay?__\n",
+        "\n",
+        "The analysis shows that weather-related delays are the most significant, affecting approximately 6.5% of all flights. These delays include both severe and mild weather impacts, offering a more comprehensive view of real-world disruptions. Carrier delays, which typically stem from airline operational issues, are also notable at 3.8%. In contrast, security delays are extremely rare, impacting less than 0.1% of total flights. This comparison highlights that weather is the dominant factor in flight disruptions, both in terms of frequency and impact.\n"
+      ],
+      "id": "5b596de4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "## STRETCH QUESTION|TASK 1\n",
+        "carrier = pd.to_numeric(df_clean['num_of_delays_carrier'], errors='coerce').fillna(0).sum()\n",
+        "security = pd.to_numeric(df_clean['num_of_delays_security'], errors='coerce').fillna(0).sum()\n",
+        "weather = pd.to_numeric(df_clean['weather_delay_all'], errors='coerce').fillna(0).sum()\n",
+        "\n",
+        "# Total flights\n",
+        "total_flights = pd.to_numeric(df_clean['num_of_flights_total'], errors='coerce').fillna(0).sum()\n",
+        "\n",
+        "# Build the DataFrame\n",
+        "totals = pd.DataFrame({\n",
+        "    'delay_type': ['Carrier', 'Security', 'Weather'],\n",
+        "    'total_delays': [carrier, security, weather]\n",
+        "})\n",
+        "\n",
+        "# Ensure all are numeric\n",
+        "totals['total_delays'] = pd.to_numeric(totals['total_delays'], errors='coerce')\n",
+        "\n",
+        "# Calculate proportions\n",
+        "totals['prop_delayed'] = totals['total_delays'] / total_flights\n",
+        "\n",
+        "# Sort\n",
+        "totals = totals.sort_values('prop_delayed', ascending=False)\n",
+        "\n",
+        "# Print safely\n",
+        "print(totals.to_string(index=False))\n",
+        "\n",
+        "\n",
+        "# Optional plot\n",
+        "ggplot(totals, aes(x='delay_type', y='prop_delayed')) + \\\n",
+        "    geom_bar(stat='identity', fill='#FF7F7F') + \\\n",
+        "    labs(title='Proportion of Total Flights Delayed by Category',\n",
+        "         x='Delay Type', y='Proportion of Flights') + \\\n",
+        "    theme(axis_text_x=element_text(size=12))"
+      ],
+      "id": "fd1bd8a1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "The bar chart clearly visualizes:\n",
+        "Weather delays are the most common, affecting ~6.5% of all flights\n",
+        "Carrier delays are next, affecting ~3.8%\n",
+        "Security delays are extremely rare, under 0.1%\n",
+        "\n",
+        "---\n"
+      ],
+      "id": "cbdd427a"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python312",
+      "language": "python",
+      "display_name": "Python 3.12 (correct)",
+      "path": "/Users/maiafaith/Library/Jupyter/kernels/python312"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

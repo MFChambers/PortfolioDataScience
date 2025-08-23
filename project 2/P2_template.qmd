@@ -1,0 +1,411 @@
+---
+title: "Client Report - Finding Relationships in Baseball"
+subtitle: "Course DS 250"
+author: "[Maia Faith Chambers]"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import pandas as pd 
+import numpy as np
+import sqlite3
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+sqlite_file = 'lahmansbaseballdb.sqlite'
+con = sqlite3.connect(sqlite_file)
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+
+```
+
+## QUESTION|TASK 1
+
+__Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.__  
+
+The query below returns the results of two players who attended BYU-Idaho: Mark L. Lindsma and Garrett Stephenson, identified by their player IDs as lindsma01 and stephga01, respectively. Both players had long and varied careers in Major League Baseball. Lindsma played from 2007 to 2014, while Stephenson’s career spanned from 1997 to 2003. Lindsma’s salary peaked later in his career, earning $4,000,000 in 2014 with the Chicago White Sox. In contrast, Stephenson reached his highest salary of $1,025,000 in 2001, during the mid-point of his career with the St. Louis Cardinals. This analysis highlights the financial success of these two BYU-Idaho alumni in the professional baseball world.
+
+```{python}
+# Query salary info for BYU-Idaho players using known playerIDs
+query_byu_players = """
+SELECT 
+    playerID, 
+    salary,
+    yearID,
+    teamID
+FROM 
+    Salaries
+WHERE 
+    playerID IN ('lindsma01', 'stephga01')
+ORDER BY 
+    salary DESC;
+"""
+df_baseball1 = pd.read_sql_query(query_byu_players, con)
+df_baseball1["schoolID"] = "idbyuid"
+df_baseball1
+
+```
+
+```{python}
+#This part is extra, I wanted to see how it would look in a lets plot showing the comparrison of salary over the two players careers.
+# Line plot to visualize their salary over time
+query_compare_salaries = """
+SELECT 
+    playerID, 
+    yearID, 
+    salary
+FROM 
+    Salaries
+WHERE 
+    playerID IN ('lindsma01', 'stephga01')
+ORDER BY 
+    yearID;
+"""
+
+df_salaries = pd.read_sql_query(query_compare_salaries, con)
+
+player_colors = {
+    'lindsma01': '#27251F',
+    'stephga01': '#C41E3A'
+}
+
+ggplot(df_salaries, aes(x='yearID', y='salary', color=as_discrete('playerID'))) + \
+    geom_line(size=2) + \
+    scale_color_manual(values=player_colors) + \
+    scale_x_continuous(breaks=list(range(df_salaries['yearID'].min(), df_salaries['yearID'].max()+1))) + \
+    ggtitle("Salary Comparison: Mark Lindsma vs Garrett Stephenson") + \
+    xlab("Year") + \
+    ylab("Salary (USD)") + \
+    theme_minimal()
+
+
+```
+
+
+## QUESTION|TASK 2
+
+__This three-part question requires you to calculate batting average (number of hits divided by the number of at-bats)__  
+    a. Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.  
+    a. Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.  
+    a. Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.  
+
+This three-part question looked at batting averages, which are calculated by dividing hits by at-bats. For the first part, I found the top batting averages for players who had at least one at-bat in a season. Not surprisingly, all five players had a perfect 1.000 average, meaning they got a hit every time they were officially at bat that year. But most of them probably only had one or two chances, so the data isn't super meaningful yet.
+
+```{python}
+# Include and execute your code here
+query_2a = """
+SELECT 
+    playerID, 
+    yearID, 
+    ROUND(CAST(H AS FLOAT)/AB, 3) AS batting_avg
+FROM 
+    Batting
+WHERE 
+    AB > 0
+ORDER BY 
+    batting_avg DESC, playerID ASC
+LIMIT 5;
+"""
+
+df_2a = pd.read_sql_query(query_2a, con)
+df_2a
+
+```
+
+In the second part, I made the filter a bit stricter by only including players with at least 10 at-bats. This helped bring out more reliable results. The top players now had averages between .571 and .643, with names like Manny Ny (1974) and Carson M. (2013) leading the list. These guys still had great seasons, but the extra filter helps avoid flukes.
+```{python}
+query_2b = """
+SELECT 
+    playerID, 
+    yearID, 
+    ROUND(CAST(H AS FLOAT)/AB, 3) AS batting_avg
+FROM 
+    Batting
+WHERE 
+    AB >= 10
+ORDER BY 
+    batting_avg DESC, playerID ASC
+LIMIT 5;
+"""
+
+df_2b = pd.read_sql_query(query_2b, con)
+df_2b
+
+```
+
+For the third part, I calculated batting averages over entire careers by summing up all hits and at-bats for each player and then dividing. I also made sure to only include players with at least 100 at-bats total. The results brought out legends like Ty Cobb (.366), Rogers Hornsby (.358), and Joe Jackson (.356). These are the kind of averages that reflect long-term consistency, not just one standout season.
+```{python}
+query_2c = """
+SELECT 
+    playerID, 
+    ROUND(SUM(CAST(H AS FLOAT))/SUM(AB), 3) AS career_batting_avg
+FROM 
+    Batting
+GROUP BY 
+    playerID
+HAVING 
+    SUM(AB) >= 100
+ORDER BY 
+    career_batting_avg DESC, playerID ASC
+LIMIT 5;
+"""
+
+df_2c = pd.read_sql_query(query_2c, con)
+df_2c
+
+
+```
+
+
+## QUESTION|TASK 3
+
+__Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?__
+
+I used the Seattle Mariners and the Texas rangers using average salary by year as my metric. The SQL query groups the player salaries by team and year and then calculates the average salary for each. The results are from the range years of 1985 to 2016, during this time the avaerage salary was over $6 million. The Marineres showed growth but were slightly behind in the end. This comparison gave me a better sense of how each organization has financially valued its players over time. It also raises questions about how payroll size might relate to team performance, although I'm a mariners fan, I realize we lost many games so it would be interesting to see a performance to salary analysis.
+
+```{python}
+query_task3_mariners_rangers = """
+SELECT 
+    teamID, 
+    yearID, 
+    ROUND(AVG(salary), 2) AS avg_salary
+FROM 
+    Salaries
+WHERE 
+    teamID IN ('SEA', 'TEX')
+GROUP BY 
+    teamID, yearID
+ORDER BY 
+    yearID;
+"""
+
+df_task3_mr = pd.read_sql_query(query_task3_mariners_rangers, con)
+df_task3_mr
+
+```
+
+The chart shows that both teams started with lower salaries in the 1980s, but average pay steadily increased over time. While both teams experienced ups and downs, the Texas Rangers had more dramatic spikes and sharper increases compared to the Mariners. The Mariners' salary growth was more consistent and gradual, whereas the Rangers ended up on top with more noticeable jumps throughout the years.
+```{python}
+#the plot
+from lets_plot.mapping import as_discrete
+
+team_colors = {
+    'SEA': '#0C2C56',  # Mariners - Navy
+    'TEX': '#C0111F'   # Rangers - Red
+}
+
+ggplot(df_task3_mr, aes(x='yearID', y='avg_salary', color=as_discrete('teamID'))) + \
+    geom_line(size=1.5) + \
+    scale_color_manual(values=team_colors) + \
+    scale_x_continuous(breaks=list(range(df_task3_mr['yearID'].min(), df_task3_mr['yearID'].max()+1))) + \
+    ggtitle("Average Salary: Seattle Mariners vs Texas Rangers") + \
+    xlab("Year") + \
+    ylab("Average Salary (USD)") + \
+    theme_minimal()
+
+```
+
+---
+
+## STRETCH QUESTION|TASK 1
+
+__Advanced Salary Distribution by Position (with Case Statement):__  
+
+    * Write an SQL query that provides a summary table showing the average salary for each position (e.g., pitcher, catcher, outfielder). Position information can be found in the fielding table in the POS column. 
+    
+        Include the following columns:
+
+        * position
+        * average_salary
+        * total_players
+        * highest_salary  
+
+    * The highest_salary column should display the highest salary ever earned by a player in that position. 
+
+    * Additionally, create a new column called salary_category using a case statement:  
+
+        * If the average salary is above $3 million, categorize it as “High Salary.”
+        * If the average salary is between $2 million and $3 million, categorize it as “Medium Salary.”
+        * Otherwise, categorize it as “Low Salary.”  
+
+    * Order the table by average salary in descending order.
+
+    **Hint:** Beware, it is common for a player to play multiple positions in a single year. For this analysis, each player’s salary should only be counted toward one position in a given year: the position at which they played the most games that year. This will likely require a (sub-query)[https://docs.data.world/documentation/sql/concepts/advanced/WITH.html].
+
+    
+
+_type your results and analysis here_
+
+```{python}
+# Include and execute your code here
+salary_by_position_query = """
+WITH PrimaryPosition AS (
+    SELECT 
+        playerID,
+        yearID,
+        POS,
+        MAX(G) AS games_played
+    FROM (
+        SELECT 
+            playerID, 
+            yearID, 
+            POS, 
+            SUM(G) AS G
+        FROM 
+            Fielding
+        GROUP BY 
+            playerID, yearID, POS
+    )
+    GROUP BY 
+        playerID, yearID
+    HAVING 
+        G = MAX(G)
+),
+
+PositionSalary AS (
+    SELECT 
+        pp.POS AS position,
+        s.playerID,
+        s.salary
+    FROM 
+        Salaries s
+    JOIN 
+        PrimaryPosition pp ON s.playerID = pp.playerID AND s.yearID = pp.yearID
+)
+
+SELECT 
+    position,
+    ROUND(AVG(salary), 2) AS average_salary,
+    COUNT(DISTINCT playerID) AS total_players,
+    MAX(salary) AS highest_salary,
+    CASE 
+        WHEN AVG(salary) > 3000000 THEN 'High Salary'
+        WHEN AVG(salary) BETWEEN 2000000 AND 3000000 THEN 'Medium Salary'
+        ELSE 'Low Salary'
+    END AS salary_category
+FROM 
+    PositionSalary
+GROUP BY 
+    position
+ORDER BY 
+    average_salary DESC;
+"""
+
+df_salary_by_position = pd.read_sql_query(salary_by_position_query, con)
+df_salary_by_position
+
+
+```
+
+
+## STRETCH QUESTION|TASK 2
+
+__Advanced Career Longevity and Performance (with Subqueries):__
+
+    * Calculate the average career length (in years) for players who have played at least **10 games**. Then, identify the top 10 players with the longest careers (based on the number of years they played). Include their: 
+
+        * playerID
+        * first_name
+        * last_name
+        * career_length
+
+    * The career_length should be calculated as the difference between the maximum and minimum yearID for each player.  
+
+_type your results and analysis here_
+
+```{python}
+career_query = """
+WITH CareerSpan AS (
+    SELECT 
+        a.playerID,
+        MIN(a.yearID) AS start_year,
+        MAX(a.yearID) AS end_year,
+        (MAX(a.yearID) - MIN(a.yearID) + 1) AS career_length,
+        SUM(a.G_all) AS total_games
+    FROM 
+        Appearances a
+    GROUP BY 
+        a.playerID
+    HAVING 
+        total_games >= 10
+),
+
+TopCareers AS (
+    SELECT 
+        cs.playerID,
+        p.nameFirst AS first_name,
+        p.nameLast AS last_name,
+        cs.career_length
+    FROM 
+        CareerSpan cs
+    JOIN 
+        People p ON cs.playerID = p.playerID
+    ORDER BY 
+        cs.career_length DESC
+    LIMIT 10
+)
+
+SELECT 
+    * 
+FROM 
+    TopCareers;
+"""
+
+df_top_careers = pd.read_sql_query(career_query, con)
+df_top_careers
+
+
+```
+
+```{python}
+avg_career_query = """
+WITH CareerSpan AS (
+    SELECT 
+        playerID,
+        MIN(yearID) AS start_year,
+        MAX(yearID) AS end_year,
+        (MAX(yearID) - MIN(yearID) + 1) AS career_length,
+        SUM(G_all) AS total_games
+    FROM 
+        Appearances
+    GROUP BY 
+        playerID
+    HAVING 
+        total_games >= 10
+)
+
+SELECT 
+    ROUND(AVG(career_length), 2) AS avg_career_length
+FROM 
+    CareerSpan;
+"""
+
+df_avg_career = pd.read_sql_query(avg_career_query, con)
+df_avg_career
+```
+---
+

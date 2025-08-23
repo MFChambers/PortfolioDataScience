@@ -1,0 +1,52 @@
+{
+  "cells": [
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import sqlite3\n",
+        "import pandas as pd\n",
+        "\n",
+        "sqlite_file = 'lahmansbaseballdb (1).sqlite'  # Adjusted for your uploaded file\n",
+        "\n",
+        "con = sqlite3.connect(sqlite_file)\n",
+        "\n",
+        "# Question 1: Preview the table\n",
+        "q = '''\n",
+        "SELECT * FROM Batting\n",
+        "LIMIT 2;\n",
+        "'''\n",
+        "qr = pd.read_sql_query(q, con)\n",
+        "print(qr)\n",
+        "\n",
+        "# Question 2: Get data for addybo01 in 1871\n",
+        "q = '''\n",
+        "SELECT yearID, playerID, AB, H\n",
+        "FROM Batting\n",
+        "WHERE playerID = 'addybo01' AND yearID = 1871;\n",
+        "'''\n",
+        "qr = pd.read_sql_query(q, con)\n",
+        "print(qr)\n",
+        "\n",
+        "# Calculate batting average for 1871\n",
+        "batting_avg = round(qr['H'][0] / qr['AB'][0], 3)\n",
+        "print(\"Batting average for 1871:\", batting_avg)\n",
+        "\n",
+        "con.close()"
+      ],
+      "id": "0c1ab437",
+      "execution_count": null,
+      "outputs": []
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Library/Frameworks/Python.framework/Versions/3.12/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

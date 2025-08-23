@@ -1,0 +1,143 @@
+
+```{python}
+import pandas as pd
+from lets_plot import *
+
+# Setup lets-plot
+LetsPlot.setup_html()
+
+# Load dataset
+names = pd.read_csv("names_year.csv")
+
+# Filter for John
+john = names[names["name"] == "John"]
+
+# Melt to long format
+john_long = john.melt(id_vars=["name", "year"], var_name="state", value_name="number")
+
+# Clean: convert number to numeric and drop NaNs
+john_long["number"] = pd.to_numeric(john_long["number"], errors="coerce")
+john_long = john_long.dropna(subset=["number"])
+
+# Filter for UT and OR
+john_ut_or = john_long[john_long["state"].isin(["UT", "OR"])]
+john_ut_or["state"] = john_ut_or["state"].astype("category")
+
+# Define vertical lines
+vlines = [1936, 1976, 1999]
+
+# Create labels for vertical lines
+labels_df = john_ut_or[john_ut_or["year"].isin(vlines)].groupby("year", as_index=False)["number"].max()
+labels_df["label"] = labels_df["year"].astype(str)
+
+# Plot
+plot = (
+    ggplot(john_ut_or, aes(x="year", y="number", color="state")) +
+    geom_line(size=1.2) +
+    geom_vline(xintercept=vlines, linetype="dashed", color="gray") +
+    geom_text(data=labels_df, mapping=aes(x="year", y="number", label="label"), color="gray") +
+    ggtitle("The history of John for Utah (red) and Oregon (orange)") +
+    xlab("Year name given") +
+    ylab("Count of John") +
+    scale_color_manual(values={"UT": "red", "OR": "orange"}) +
+    theme_minimal()
+)
+
+plot
+
+```
+
+
+
+```{python}
+
+#Q2
+import numpy as np
+import pandas as pd
+
+problem = pd.Series([np.nan, 18, 22, 45, 31, np.nan, 85, 38, 129, 8000, 22, 2])
+
+# Step 1: Calculate std (excluding NaNs)
+std_val = problem.std()
+
+# Step 2: Replace NaNs with std
+filled = problem.fillna(std_val)
+
+# Step 3: Calculate mean
+mean_val = round(filled.mean(), 2)
+mean_val
+
+```
+
+
+```{python}
+#Q3
+import pandas as pd
+from lets_plot import *
+
+LetsPlot.setup_html()
+
+# Original age ranges
+ages = pd.Series(["10-25", "10-25", "26-35", "56-85", "0-9", "46-55",
+                  "56-85", "0-9", "26-35", "56-85", "0-9", "10-25"])
+
+# Split into two columns and calculate midpoint
+split_ages = ages.str.split("-", expand=True).astype(int)
+split_ages.columns = ["low", "high"]
+split_ages["mid"] = split_ages.mean(axis=1)
+
+# Make histogram
+ggplot(split_ages, aes(x="mid")) + \
+    geom_histogram(binwidth=10, color="black", fill="skyblue") + \
+    ggtitle("Age Distribution") + \
+    xlab("Midpoint of Age Range") + \
+    ylab("Frequency") + \
+    theme_minimal()
+
+```
+
+```{python}
+
+import pandas as pd
+import matplotlib.pyplot as plt  # <- missing import for bar plot
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+from lets_plot import *
+
+LetsPlot.setup_html()
+
+# Load cleaned dataset
+star = pd.read_csv("StarWars_cleaned.csv")
+
+# Drop missing rows
+star = star.dropna()
+
+# Separate features and target
+X = star.drop(columns=["Gender"])
+y = star["Gender"]
+
+# Split data
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=2022)
+
+# Train model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Predict and evaluate
+preds = model.predict(X_test)
+acc = accuracy_score(y_test, preds)
+print("Accuracy:", round(acc, 2))
+
+# Feature importance plot
+importances = pd.Series(model.feature_importances_, index=X.columns)
+top10 = importances.sort_values(ascending=False).head(10)
+
+# Plot using matplotlib
+top10.plot(kind="barh", title="Top 10 Important Features", figsize=(8, 6))
+plt.xlabel("Importance")
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.show()
+
+```

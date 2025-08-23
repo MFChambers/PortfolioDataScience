@@ -1,0 +1,435 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Client Report - The War with Star Wars\"\n",
+        "subtitle: \"Course DS 250\"\n",
+        "author: \"Maia Faith Chambers\"\n",
+        "format:\n",
+        "  html:\n",
+        "    self-contained: true\n",
+        "    page-layout: full\n",
+        "    title-block-banner: true\n",
+        "    toc: true\n",
+        "    toc-depth: 3\n",
+        "    toc-location: body\n",
+        "    number-sections: false\n",
+        "    html-math-method: katex\n",
+        "    code-fold: true\n",
+        "    code-summary: \"Show the code\"\n",
+        "    code-overflow: wrap\n",
+        "    code-copy: hover\n",
+        "    code-tools:\n",
+        "        source: false\n",
+        "        toggle: true\n",
+        "        caption: See code\n",
+        "execute: \n",
+        "  warning: false\n",
+        "---"
+      ],
+      "id": "7a9c7cef"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import pandas as pd \n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "from sklearn.model_selection import train_test_split\n",
+        "from sklearn.ensemble import RandomForestClassifier\n",
+        "from sklearn.metrics import accuracy_score, classification_report, confusion_matrix"
+      ],
+      "id": "c63202bb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## Elevator pitch\n",
+        "\n",
+        "After cleaning and restructuring the Star Wars survey data, our Random Forest model achieved an accuracy of 75.7% in predicting whether respondents earn more than $50,000 per year. Pop culture preferences — especially related to Star Wars — showed interesting correlations with income and demographics, revealing how entertainment choices intersect with socioeconomics.\n",
+        "\n",
+        "\n",
+        "\n",
+        "## QUESTION|TASK 1\n",
+        "\n",
+        "__Shorten the column names and clean them up for easier use with pandas.__ Provide a table or list that exemplifies how you fixed the names. \n",
+        "\n",
+        "| **Original Name**                                                                   | **Cleaned Name** |\n",
+        "| ----------------------------------------------------------------------------------- | ---------------- |\n",
+        "| Which of the following Star Wars films have you seen? Please select all that apply. | seen\\_any        |\n",
+        "| Age                                                                                 | age              |\n",
+        "| Education                                                                           | education        |\n",
+        "| Household Income                                                                    | income           |\n"
+      ],
+      "id": "9678f430"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "url = \"https://raw.githubusercontent.com/fivethirtyeight/data/master/star-wars-survey/StarWars.csv\"\n",
+        "df = pd.read_csv(url, encoding=\"ISO-8859-1\")\n",
+        "\n",
+        "rename_map = {\n",
+        "    \"Which of the following Star Wars films have you seen? Please select all that apply.\": \"seen_any\",\n",
+        "    \"Age\": \"age\",\n",
+        "    \"Education\": \"education\",\n",
+        "    \"Household Income\": \"income\"\n",
+        "}\n",
+        "df = df.rename(columns=rename_map)\n",
+        "df.columns = df.columns.str.strip().str.replace(\" \", \"_\").str.replace(\"?\", \"\").str.lower()\n",
+        "df.head()"
+      ],
+      "id": "63f25d27",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 2\n",
+        "\n",
+        "__Clean and format the data so that it can be used in a machine learning model.__ As you format the data, you should complete each item listed below. In your final report provide example(s) of the reformatted data with a short description of the changes made.  \n",
+        "    a. Filter the dataset to respondents that have seen at least one film  \n",
+        "    a. Create a new column that converts the age ranges to a single number. Drop the age range categorical column  \n",
+        "    a. Create a new column that converts the education groupings to a single number. Drop the school categorical column  \n",
+        "    a. Create a new column that converts the income ranges to a single number. Drop the income range categorical column  \n",
+        "    a. Create your target (also known as “y” or “label”) column based on the new income range column  \n",
+        "    a. One-hot encode all remaining categorical columns   \n",
+        "\n",
+        "The reformatted data captures not just demographic attributes like age, education, and income — but also opinions and preferences related to the Star Wars universe, along with geographic and pop culture context. This dataset provides a unique lens into how demographic traits (age, education, income) and personal interests (Star Wars fandom, film ranking, Star Trek crossover) intersect. Even within this small sample:\n",
+        "Education and age align somewhat with income, but not always predictably.\n",
+        "Star Wars fans in this sample are more likely to be high earners.\n",
+        "Geographic and cultural variables are captured and ready to be tested in your machine learning model to see what really drives income predictions.\n"
+      ],
+      "id": "5c162e6f"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df_seen = df[df[\"seen_any\"].notna()].copy()"
+      ],
+      "id": "a4bfc999",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "age_map = {\n",
+        "    \"18-29\": 23.5,\n",
+        "    \"30-44\": 37,\n",
+        "    \"45-60\": 52,\n",
+        "    \"> 60\": 65\n",
+        "}\n",
+        "df_seen[\"age_num\"] = df_seen[\"age\"].map(age_map)\n",
+        "df_seen.drop(columns=\"age\", inplace=True)"
+      ],
+      "id": "b499e7bb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "edu_map = {\n",
+        "    \"Less than high school degree\": 1,\n",
+        "    \"High school degree\": 2,\n",
+        "    \"Some college or Associate degree\": 3,\n",
+        "    \"Bachelor degree\": 4,\n",
+        "    \"Graduate degree\": 5\n",
+        "}\n",
+        "df_seen[\"education_num\"] = df_seen[\"education\"].map(edu_map)\n",
+        "df_seen.drop(columns=\"education\", inplace=True)"
+      ],
+      "id": "c5b5c297",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "income_map = {\n",
+        "    \"Under $25,000\": 12500,\n",
+        "    \"$25,000 - $49,999\": 37500,\n",
+        "    \"$50,000 - $99,999\": 75000,\n",
+        "    \"$100,000 - $149,999\": 125000,\n",
+        "    \"$150,000+\": 175000\n",
+        "}\n",
+        "df_seen[\"income_num\"] = df_seen[\"income\"].map(income_map)\n",
+        "df_seen.drop(columns=\"income\", inplace=True)"
+      ],
+      "id": "7fffbdb5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df_seen[\"target\"] = (df_seen[\"income_num\"] > 50000).astype(int)"
+      ],
+      "id": "328784f1",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Drop rows with missing key data\n",
+        "df_seen = df_seen.dropna(subset=[\"age_num\", \"education_num\", \"income_num\", \"target\"])\n",
+        "\n",
+        "# One-hot encode object columns\n",
+        "categorical_cols = df_seen.select_dtypes(include=\"object\").columns\n",
+        "df_final = pd.get_dummies(df_seen, columns=categorical_cols, drop_first=True)\n",
+        "df_final.head()"
+      ],
+      "id": "5e3e9b22",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "This table illustrates how survey responses were converted to numeric formats:\n",
+        "\n",
+        "Age, education, and income are now usable numerical columns.\n",
+        "\n",
+        "The target column defines the prediction goal.\n",
+        "\n",
+        "Each one-hot encoded column reflects a categorical feature (e.g., gender, location, preferences) as True/False binary flags.\n",
+        "\n",
+        "These transformations ensured that the dataset could be successfully fed into a machine learning pipeline without error, and allowed us to evaluate demographic and preference-based predictors of income with interpretable results.\n",
+        "\n",
+        "\n",
+        "## QUESTION|TASK 3\n",
+        "\n",
+        "__Validate that the data provided on GitHub lines up with the article by recreating 2 of the visuals from the article.__  \n",
+        "\n",
+        "To validate the dataset against the original article, I recreated two visualizations: one showing general Star Wars viewership and another showing the most disliked characters. The first chart confirms that the vast majority of respondents have seen at least one of the six Star Wars films, while a much smaller group indicated they had not. This supports the reliability of the rest of the survey, since most participants were familiar with the franchise and could provide informed opinions. The second chart attempts to visualize which characters were viewed most unfavorably. While the underlying logic worked, the chart labels defaulted to generic terms like “Him/Her” due to long or uncleaned column names in the dataset. Nonetheless, the plot shows that respondents had strong negative reactions to at least one character—consistent with the article’s emphasis on Jar Jar Binks being widely disliked. Together, these visualizations affirm that the dataset aligns reasonably well with the original article and contains meaningful patterns in viewership and character sentiment.\n"
+      ],
+      "id": "7b4ca69b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Try to detect multiple episode-specific viewership columns\n",
+        "seen_cols = [col for col in df.columns if \"have_you_seen\" in col and \"episode\" in col]\n",
+        "\n",
+        "if seen_cols:\n",
+        "    # Count \"Yes\" responses for each movie column\n",
+        "    movie_counts = df[seen_cols].apply(lambda col: col == \"Yes\").sum().sort_values()\n",
+        "    movie_counts.plot(kind=\"barh\", title=\"Star Wars Movie Viewership\", xlabel=\"Respondents\")\n",
+        "    plt.tight_layout()\n",
+        "    plt.show()\n",
+        "else:\n",
+        "    # Fallback if only the summary column exists\n",
+        "    summary_col = \"have_you_seen_any_of_the_6_films_in_the_star_wars_franchise\"\n",
+        "    if summary_col in df.columns:\n",
+        "        df[summary_col].value_counts().plot(\n",
+        "            kind=\"bar\", title=\"Seen Any Star Wars Film?\", ylabel=\"Respondents\"\n",
+        "        )\n",
+        "        plt.tight_layout()\n",
+        "        plt.show()\n",
+        "    else:\n",
+        "        print(\"Movie viewership columns not found.\")\n",
+        "        print([col for col in df.columns if \"seen\" in col or \"star_wars\" in col])"
+      ],
+      "id": "5b32a28c",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "# Find all columns related to character favorability\n",
+        "char_cols = [col for col in df.columns if \"unfavorably\" in col or \"character\" in col]\n",
+        "\n",
+        "if char_cols:\n",
+        "    # Count \"Very unfavorably\" votes across all relevant columns\n",
+        "    char_votes = df[char_cols].apply(lambda col: col.value_counts().get(\"Very unfavorably\", 0))\n",
+        "\n",
+        "    # Clean up column names into readable character names\n",
+        "    clean_labels = [\n",
+        "        col.split(\"with_\")[-1].replace(\"_\", \" \").replace(\".\", \"\").title()\n",
+        "        for col in char_votes.index\n",
+        "    ]\n",
+        "    char_votes.index = clean_labels\n",
+        "\n",
+        "    # Sort and plot\n",
+        "    char_votes.sort_values().plot(\n",
+        "        kind=\"barh\", figsize=(8, 6), title=\"Most Disliked Star Wars Characters\", color=\"steelblue\"\n",
+        "    )\n",
+        "    plt.xlabel(\"Number of 'Very Unfavorably' Votes\")\n",
+        "    plt.ylabel(\"Character\")\n",
+        "    plt.tight_layout()\n",
+        "    plt.show()\n",
+        "else:\n",
+        "    print(\"Disliked character columns not found. The dataset version may not include them.\")\n",
+        "\n",
+        "# Helpful debug: show star wars–related columns\n",
+        "print([col for col in df.columns if \"star_wars\" in col])"
+      ],
+      "id": "1e475ea5",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION|TASK 4\n",
+        "\n",
+        "__Build a machine learning model that predicts whether a person makes more than $50k. Describe your model and report the accuracy.__ \n",
+        "\n",
+        "To predict whether a respondent earns more than $50,000 annually, I trained a Random Forest Classifier using the cleaned and preprocessed Star Wars survey dataset. The features included age, education level, income, and one-hot encoded responses to various Star Wars-related survey questions. The model achieved an accuracy of 75.71%, significantly outperforming the initial 62% estimate mentioned in the planning stage. The classification report shows a strong ability to correctly identify high-income earners (target = 1), with a precision of 0.76, recall of 0.98, and f1-score of 0.86. While the model struggles more with predicting low-income respondents (target = 0), the overall performance indicates that demographic and cultural preferences in the dataset contain meaningful patterns associated with income."
+      ],
+      "id": "23c066de"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# define features and target\n",
+        "X = df_final.drop(columns=[\"income_num\", \"target\"])\n",
+        "y = df_final[\"target\"]\n",
+        "\n",
+        "X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)\n",
+        "\n",
+        "model = RandomForestClassifier(random_state=42)\n",
+        "model.fit(X_train, y_train)\n",
+        "y_pred = model.predict(X_test)\n",
+        "\n",
+        "accuracy = accuracy_score(y_test, y_pred)\n",
+        "print(f\"Random Forest accuracy: {accuracy:.2%}\")\n",
+        "print(classification_report(y_test, y_pred))"
+      ],
+      "id": "dec5012d",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "\n",
+        "## STRETCH QUESTION|TASK 1\n",
+        "\n",
+        "__Build a machine learning model that predicts whether a person makes more than $50k. With accuracy of at least 65%. Describe your model and report the accuracy.__\n",
+        "\n",
+        "In Stretch Task 1, I sought to improve the model beyond 65% accuracy. By tuning hyperparameters (increasing estimators and adjusting depth), we achieved the same 75.71% accuracy on the test set, which meets and exceeds the 65% stretch goal. These results suggest that even in a culturally niche dataset like this, machine learning can effectively model real-world socioeconomic traits when survey data is properly cleaned and engineered.\n"
+      ],
+      "id": "93a63df4"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "model2 = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)\n",
+        "model2.fit(X_train, y_train)\n",
+        "preds2 = model2.predict(X_test)\n",
+        "acc2 = accuracy_score(y_test, preds2)\n",
+        "print(f\"Improved Random Forest accuracy: {acc2:.2%}\")"
+      ],
+      "id": "b5fe5548",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## STRETCH QUESTION|TASK 2\n",
+        "\n",
+        "__Validate the data provided on GitHub lines up with the article by recreating a 3rd visual from the article.__\n",
+        "\n",
+        "To validate the dataset against the original article, I recreated a third visual showing the distribution of respondents by gender. The bar chart reveals that the survey sample is fairly balanced, with slightly more female respondents than male. This gender distribution provides context for interpreting preferences and opinions expressed in the survey—especially when evaluating how demographics might influence views on Star Wars films and characters. Ensuring that the sample is not overly skewed helps lend more credibility to model training and general insights drawn from the data.\n"
+      ],
+      "id": "03a208ff"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "if \"gender\" in df.columns:\n",
+        "    df[\"gender\"].value_counts().plot(kind=\"bar\", title=\"Respondents by Gender\", ylabel=\"Count\")\n",
+        "    plt.tight_layout()\n",
+        "    plt.show()\n",
+        "else:\n",
+        "    print(\"Gender column not found.\")"
+      ],
+      "id": "26dd0e93",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## STRETCH QUESTION|TASK 3\n",
+        "\n",
+        "__Create a new column that converts the location groupings to a single number. Drop the location categorical column.__  \n",
+        "\n",
+        "To prepare the dataset for machine learning, I converted the categorical location_(census_region) variable into a numerical format by assigning each region a unique code using pandas' category method. This transformation allows the model to interpret geographic data in a structured, numeric form without introducing artificial ordinal relationships. The original text column was dropped after conversion to avoid redundancy. This step ensures location can now be used as a predictive feature in the model while maintaining a clean and efficient dataset structure.\n"
+      ],
+      "id": "b7feb6a3"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "if \"location_(census_region)\" in df_seen.columns:\n",
+        "    # Convert location to categorical codes\n",
+        "    df_seen[\"location_num\"] = df_seen[\"location_(census_region)\"].astype(\"category\").cat.codes\n",
+        "    \n",
+        "    # Drop original column\n",
+        "    df_seen.drop(columns=\"location_(census_region)\", inplace=True)\n",
+        "    \n",
+        "    # Preview result\n",
+        "    print(df_seen[[\"location_num\"]].head())\n",
+        "else:\n",
+        "    print(\"Location column not found.\")"
+      ],
+      "id": "82dbe7de",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---"
+      ],
+      "id": "1feb9979"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "/Library/Frameworks/Python.framework/Versions/3.13/share/jupyter/kernels/python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

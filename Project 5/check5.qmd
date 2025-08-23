@@ -1,0 +1,29 @@
+```{python}
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html(isolated_frame=True)
+
+url = 'https://github.com/fivethirtyeight/data/raw/master/star-wars-survey/StarWars.csv'
+df = pd.read_csv(url, encoding='ISO-8859-1')
+
+import pandas as pd
+
+# Load the dataset
+url = 'https://github.com/fivethirtyeight/data/raw/master/star-wars-survey/StarWars.csv'
+df = pd.read_csv(url, encoding='ISO-8859-1')
+
+# Identify the relevant column and count non-missing values
+# The column name is "Have you seen any of the 6 films in the Star Wars franchise?"
+# We assume that a non-null value in this column indicates they have seen at least one film.
+seen_films_count = df['Have you seen any of the 6 films in the Star Wars franchise?'].notna().sum()
+
+# Count total respondents
+total_respondents = len(df)
+
+# Calculate the percentage
+percentage_seen = (seen_films_count / total_respondents) * 100
+
+# Report to four decimal places
+print(f"{percentage_seen:.4f}")
+```

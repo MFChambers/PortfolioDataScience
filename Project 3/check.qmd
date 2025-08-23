@@ -1,0 +1,32 @@
+```{python}
+# Read in libraries
+import pandas as pd
+import numpy as np
+from lets_plot import *
+LetsPlot.setup_html(isolated_frame=True)
+
+df = pd.read_json("https://github.com/byuidatascience/data4missing/raw/master/data-raw/flights_missing/flights_missing.json")
+```
+
+```{python}
+#q1 of the check
+df.head()
+df.columns
+
+df['month'].isna().sum()
+
+df.isna().sum()
+
+df.isna().sum()
+```
+
+```{python}
+#this one works
+df['month'].replace("n/a", np.nan, inplace=True)  # Convert "n/a" strings to np.nan
+df['month'].isna().sum()
+```
+
+```{python}
+#this one works
+df['month'].isin([None, np.nan, "n/a", "NA", "NaN"]).sum()
+```
