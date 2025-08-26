@@ -59,9 +59,7 @@ After cleaning and restructuring the Star Wars survey data, our Random Forest mo
 
 
 
-## QUESTION|TASK 1
-
-__Shorten the column names and clean them up for easier use with pandas.__ Provide a table or list that exemplifies how you fixed the names. 
+## DATA CLEANING: COLUMN NAME SIMPLIFICATION
 
 | **Original Name**                                                                   | **Cleaned Name** |
 | ----------------------------------------------------------------------------------- | ---------------- |
@@ -88,20 +86,14 @@ df.head()
 ```
 
 
-## QUESTION|TASK 2
+## DATA PREPARATION FOR MODELING
 
-__Clean and format the data so that it can be used in a machine learning model.__ As you format the data, you should complete each item listed below. In your final report provide example(s) of the reformatted data with a short description of the changes made.  
-    a. Filter the dataset to respondents that have seen at least one film  
-    a. Create a new column that converts the age ranges to a single number. Drop the age range categorical column  
-    a. Create a new column that converts the education groupings to a single number. Drop the school categorical column  
-    a. Create a new column that converts the income ranges to a single number. Drop the income range categorical column  
-    a. Create your target (also known as “y” or “label”) column based on the new income range column  
-    a. One-hot encode all remaining categorical columns   
+I reformatted the Star Wars survey data to make it suitable for machine learning by filtering to respondents who had seen at least one film, converting age, education, and income categories into numeric values, creating a binary target column for respondents earning more than $50k, and one-hot encoding the remaining categorical variables.
 
 The reformatted data captures not just demographic attributes like age, education, and income — but also opinions and preferences related to the Star Wars universe, along with geographic and pop culture context. This dataset provides a unique lens into how demographic traits (age, education, income) and personal interests (Star Wars fandom, film ranking, Star Trek crossover) intersect. Even within this small sample:
-Education and age align somewhat with income, but not always predictably.
-Star Wars fans in this sample are more likely to be high earners.
-Geographic and cultural variables are captured and ready to be tested in your machine learning model to see what really drives income predictions.
+*Education and age align somewhat with income, but not always predictably.
+*Star Wars fans in this sample are more likely to be high earners.
+*Geographic and cultural variables are captured and ready to be tested in the machine learning model to see what really drives income predictions.
 
 
 ```{python}
@@ -173,9 +165,7 @@ Each one-hot encoded column reflects a categorical feature (e.g., gender, locati
 These transformations ensured that the dataset could be successfully fed into a machine learning pipeline without error, and allowed us to evaluate demographic and preference-based predictors of income with interpretable results.
 
 
-## QUESTION|TASK 3
-
-__Validate that the data provided on GitHub lines up with the article by recreating 2 of the visuals from the article.__  
+## DATA VALIDATION: RECREATING PUBLISHED VISUALS
 
 To validate the dataset against the original article, I recreated two visualizations: one showing general Star Wars viewership and another showing the most disliked characters. The first chart confirms that the vast majority of respondents have seen at least one of the six Star Wars films, while a much smaller group indicated they had not. This supports the reliability of the rest of the survey, since most participants were familiar with the franchise and could provide informed opinions. The second chart attempts to visualize which characters were viewed most unfavorably. While the underlying logic worked, the chart labels defaulted to generic terms like “Him/Her” due to long or uncleaned column names in the dataset. Nonetheless, the plot shows that respondents had strong negative reactions to at least one character—consistent with the article’s emphasis on Jar Jar Binks being widely disliked. Together, these visualizations affirm that the dataset aligns reasonably well with the original article and contains meaningful patterns in viewership and character sentiment.
 
@@ -239,9 +229,7 @@ print([col for col in df.columns if "star_wars" in col])
 
 ```
 
-## QUESTION|TASK 4
-
-__Build a machine learning model that predicts whether a person makes more than $50k. Describe your model and report the accuracy.__ 
+## INCOME PREDICTION WITH RANDOM FOREST
 
 To predict whether a respondent earns more than $50,000 annually, I trained a Random Forest Classifier using the cleaned and preprocessed Star Wars survey dataset. The features included age, education level, income, and one-hot encoded responses to various Star Wars-related survey questions. The model achieved an accuracy of 75.71%, significantly outperforming the initial 62% estimate mentioned in the planning stage. The classification report shows a strong ability to correctly identify high-income earners (target = 1), with a precision of 0.76, recall of 0.98, and f1-score of 0.86. While the model struggles more with predicting low-income respondents (target = 0), the overall performance indicates that demographic and cultural preferences in the dataset contain meaningful patterns associated with income.
 ```{python}
@@ -262,11 +250,9 @@ print(classification_report(y_test, y_pred))
 
 ---
 
-## STRETCH QUESTION|TASK 1
+## MODEL TUNING: Improving Accuracy Beyond 65%
 
-__Build a machine learning model that predicts whether a person makes more than $50k. With accuracy of at least 65%. Describe your model and report the accuracy.__
-
-In Stretch Task 1, I sought to improve the model beyond 65% accuracy. By tuning hyperparameters (increasing estimators and adjusting depth), we achieved the same 75.71% accuracy on the test set, which meets and exceeds the 65% stretch goal. These results suggest that even in a culturally niche dataset like this, machine learning can effectively model real-world socioeconomic traits when survey data is properly cleaned and engineered.
+ I sought to improve the model beyond 65% accuracy. By tuning hyperparameters (increasing estimators and adjusting depth), we achieved the same 75.71% accuracy on the test set, which meets and exceeds the 65% goal. These results suggest that even in a culturally niche dataset like this, machine learning can effectively model real-world socioeconomic traits when survey data is properly cleaned and engineered.
 
 ```{python}
 model2 = RandomForestClassifier(n_estimators=200, max_depth=10, random_state=42)
@@ -278,9 +264,7 @@ print(f"Improved Random Forest accuracy: {acc2:.2%}")
 ```
 
 
-## STRETCH QUESTION|TASK 2
-
-__Validate the data provided on GitHub lines up with the article by recreating a 3rd visual from the article.__
+## ADDITIONAL VALIDATION: Gender Distribution Visual
 
 To validate the dataset against the original article, I recreated a third visual showing the distribution of respondents by gender. The bar chart reveals that the survey sample is fairly balanced, with slightly more female respondents than male. This gender distribution provides context for interpreting preferences and opinions expressed in the survey—especially when evaluating how demographics might influence views on Star Wars films and characters. Ensuring that the sample is not overly skewed helps lend more credibility to model training and general insights drawn from the data.
 
@@ -295,9 +279,7 @@ else:
 ```
 
 
-## STRETCH QUESTION|TASK 3
-
-__Create a new column that converts the location groupings to a single number. Drop the location categorical column.__  
+## FEATURE ENGINEERING: Numeric Location Encoding
 
 To prepare the dataset for machine learning, I converted the categorical location_(census_region) variable into a numerical format by assigning each region a unique code using pandas' category method. This transformation allows the model to interpret geographic data in a structured, numeric form without introducing artificial ordinal relationships. The original text column was dropped after conversion to avoid redundancy. This step ensures location can now be used as a predictive feature in the model while maintaining a clean and efficient dataset structure.
 
