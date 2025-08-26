@@ -25,24 +25,6 @@ execute:
     
 ---
 
-```{python}
-import pandas as pd
-
-names = pd.read_csv("names_year.csv")
-names.head()
-
-```
-
-
-```{python}
-# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
-
-# Include and execute your code here
-df = pd.read_json("https://github.com/byuidatascience/data4missing/raw/master/data-raw/flights_missing/flights_missing.json")
-
-df.columns.to_list()
-```
-
 ## Client Request:
 The client provided a JSON dataset on U.S. flight activity and delays. They want missing values standardized, a clear picture of which airports experience the worst delays, and insights on when and why delays occur. They are especially interested in:
     * Identifying the worst airports for delays.
@@ -62,6 +44,24 @@ Additional Analysis:
 
 Tools/Packages: SQL (sqlite3), Python (pandas, numpy), Lets-Plot
 
+
+```{python}
+import pandas as pd
+
+names = pd.read_csv("names_year.csv")
+names.head()
+
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+df = pd.read_json("https://github.com/byuidatascience/data4missing/raw/master/data-raw/flights_missing/flights_missing.json")
+
+df.columns.to_list()
+```
 
 ## Elevator pitch
 The analysis I did discovers that SLC airport had the highest proportion of delayed flights, February was the most punctual month to travel. Weather-related delays were more prevalent in late summer and winter, with SFO airport experiencing the greatest weather impact.
