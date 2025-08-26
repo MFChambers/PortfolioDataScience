@@ -63,9 +63,7 @@ Tools/Packages: SQL (sqlite3), Python (pandas, numpy), Lets-Plot
 
 ```
 
-## CLIENT TASK 1
-
-__Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.__  
+## BYU-Idaho ALUMNI IN MAJOR LEAGUE BASEBALL
 
 The query below returns the results of two players who attended BYU-Idaho: Mark L. Lindsma and Garrett Stephenson, identified by their player IDs as lindsma01 and stephga01, respectively. Both players had long and varied careers in Major League Baseball. Lindsma played from 2007 to 2014, while Stephenson’s career spanned from 1997 to 2003. Lindsma’s salary peaked later in his career, earning $4,000,000 in 2014 with the Chicago White Sox. In contrast, Stephenson reached his highest salary of $1,025,000 in 2001, during the mid-point of his career with the St. Louis Cardinals. This analysis highlights the financial success of these two BYU-Idaho alumni in the professional baseball world.
 
@@ -126,9 +124,9 @@ ggplot(df_salaries, aes(x='yearID', y='salary', color=as_discrete('playerID'))) 
 ```
 
 
-## CLIENT TASK 2
+## BATTING AVERAGES: SEASON AND CAREER ANALYSIS
 
-__This three-part question requires you to calculate batting average (number of hits divided by the number of at-bats)__  
+__Client Request specific__  
     a. Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.  
     a. Use the same query as above, but only include players with at least 10 at bats that year. Print the top 5 results.  
     a. Now calculate the batting average for players over their entire careers (all years combined). Only include players with at least 100 at bats, and print the top 5 results.  
@@ -136,7 +134,6 @@ __This three-part question requires you to calculate batting average (number of 
 This three-part question looked at batting averages, which are calculated by dividing hits by at-bats. For the first part, I found the top batting averages for players who had at least one at-bat in a season. Not surprisingly, all five players had a perfect 1.000 average, meaning they got a hit every time they were officially at bat that year. But most of them probably only had one or two chances, so the data isn't super meaningful yet.
 
 ```{python}
-# Include and execute your code here
 query_2a = """
 SELECT 
     playerID, 
@@ -201,9 +198,7 @@ df_2c
 ```
 
 
-## CLIENT TASK 3
-
-__Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?__
+## TEAM SALARY COMPARISON: MARINERS VS. RANGERS
 
 I used the Seattle Mariners and the Texas rangers using average salary by year as my metric. The SQL query groups the player salaries by team and year and then calculates the average salary for each. The results are from the range years of 1985 to 2016, during this time the avaerage salary was over $6 million. The Marineres showed growth but were slightly behind in the end. This comparison gave me a better sense of how each organization has financially valued its players over time. It also raises questions about how payroll size might relate to team performance, although I'm a mariners fan, I realize we lost many games so it would be interesting to see a performance to salary analysis.
 
@@ -251,28 +246,7 @@ ggplot(df_task3_mr, aes(x='yearID', y='avg_salary', color=as_discrete('teamID'))
 
 ---
 
-## Advanced Salary Distribution by Position (with Case Statement):
-
-    * Write an SQL query that provides a summary table showing the average salary for each position (e.g., pitcher, catcher, outfielder). Position information can be found in the fielding table in the POS column. 
-    
-        Include the following columns:
-
-        * position
-        * average_salary
-        * total_players
-        * highest_salary  
-
-    * The highest_salary column should display the highest salary ever earned by a player in that position. 
-
-    * Additionally, create a new column called salary_category using a case statement:  
-
-        * If the average salary is above $3 million, categorize it as “High Salary.”
-        * If the average salary is between $2 million and $3 million, categorize it as “Medium Salary.”
-        * Otherwise, categorize it as “Low Salary.”  
-
-    * Order the table by average salary in descending order.
-
-    **Hint:** Beware, it is common for a player to play multiple positions in a single year. For this analysis, each player’s salary should only be counted toward one position in a given year: the position at which they played the most games that year. This will likely require a (sub-query)[https://docs.data.world/documentation/sql/concepts/advanced/WITH.html].
+## Salary Distribution by Position:
 
 
 ```{python}
@@ -337,18 +311,7 @@ df_salary_by_position
 ```
 
 
-## Advanced Career Longevity and Performance (with Subqueries):
-
-    * Calculate the average career length (in years) for players who have played at least **10 games**. Then, identify the top 10 players with the longest careers (based on the number of years they played). Include their: 
-
-        * playerID
-        * first_name
-        * last_name
-        * career_length
-
-    * The career_length should be calculated as the difference between the maximum and minimum yearID for each player.  
-
-_type your results and analysis here_
+## Career Longevity and Top 10 Longest Careers:
 
 ```{python}
 career_query = """
