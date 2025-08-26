@@ -1,0 +1,302 @@
+---
+title: "Client Report - What's in a Name?"
+subtitle: "Course DS 250"
+author: "Maia Faith Chambers"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import pandas as pd
+import numpy as np
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+
+df = pd.read_csv("https://github.com/byuidatascience/data4names/raw/master/data-raw/names_year/names_year.csv")
+
+```
+
+
+## How does your name at your birth year compare to its use historically?
+
+After filtering the data, I was able to find that in 1999, the name "Maia" was given to a total of 370 babies in the U.S. It remained an relatively uncommon name, but showed some regional popularity clusters in larger more populated stats. The state with the most names was California with 66 babies that shared my name. This accounts for nearly 18% of the national total. I was born in Arizona, which had 8 babies born in 1999 named Maia, making it more meaninful to me to see my name reflected in the data from my birth year and state. Looking at the chart I created, the data suggests that while Maia wasn't a top national name, it has been steadily adopted across a variety of coast, particularly in the coasts and in urbanized regions. The black line in the chart represents the underlying trend over time, a steady increase in popularity starting around the late 1990s and continuing past 2010. I expect that it will remain at this steady rate unless an outside source influences our society (Ex: popculture, movies, books, etc.).
+
+```{python}
+
+#Package that turns data from python lists, dictionaries, pandas df to nicely formatted tables. clean, printable string
+from tabulate import tabulate
+
+#Naming my variable and assigning my year of birth so that I can look up the data within this year
+my_name = "Maia"
+birth_year = 1999
+
+#The df is shorthand for DataFrame, with this specific application here, it allows me to create a new variable to store the filtered DataFrame, which only contains rows for the name"Maia"
+
+#The .copy() creates a separate copy of the filtered DataFrame to avoid warnings when modifying it later.
+my_name_df = df[df['name'] == my_name].copy()
+
+#The "my_name_df...th_year" creates a Boolean filter: Returns TRUE for rows where the year is 1999, and FALSE otherwise.
+birth_year_count = my_name_df[my_name_df['year'] == birth_year]
+
+#Prints the filtered DataFrame to show how many babies named "Maia" were born in 1999, across all U.S. states.
+print(birth_year_count)
+
+#Creates a new DF named maia_df that includes only the rows where the baby name is "Maia". The .copy() ensures you're working with a safe, modifiable version.
+maia_df = df[df['name'] == 'Maia'].copy()
+
+#Helps weed out the potential outliers so that the graphs I create later don't have skewed data based on outliers
+potential_outliers = maia_df.query("Total > 500 | (Total > 300 & year > 2010)").copy()
+
+#This part actually shows how many babies were named Maia ineach U.S. state in 1999
+maia_1999 = df[(df['name'] == 'Maia') & (df['year'] == 1999)].copy()
+
+#This cleans the data so that the other unnecessary columns don't appear
+maia_1999_clean = maia_1999.drop(columns=['name', 'year'])
+
+#This just moves the data from a wide format to a long format in an attempt to make the data easier to read
+maia_long = maia_1999_clean.melt(var_name='State', value_name='Count')
+
+#I didn't like that it showed even the states that had no babies named "Maia" so I filtered it to not do that.
+maia_nonzero = maia_long[maia_long['Count'] > 0]
+
+#This sorts the data by most popular to least popular, easier to read.
+maia_sorted = maia_nonzero.sort_values(by='Count', ascending=False).reset_index(drop=True)
+
+#Prints a title above the table
+print("Top States for the Name 'Maia' in 1999:\n")
+print(tabulate(maia_sorted, headers='keys', tablefmt='github', showindex=False))
+
+
+```
+
+
+```{python}
+(
+    ggplot(maia_df, aes(x='year', y='Total')) +
+    #plots each data point (a year w/ a total count for 'Maia') as a black dot
+    geom_point(color='black') +
+    #smooths out the year-to-year fluctuations and helps underly the trend over time
+    geom_smooth(se=False, method='loess', color='black') + 
+    #Highlights specific potential outliers
+    geom_point(data=potential_outliers, color='red') +
+    geom_label(
+        aes(label='year'),
+        data=potential_outliers,
+        color='red',
+        position=position_jitter(),
+        fontface='bold',
+        size=5,
+        hjust='left',
+        vjust='bottom',
+    ) +
+
+    #This creates a vertical line (hint the V line) to show the year that represents my birth, giving it more readability and allows someone to look for the data around my name.
+    geom_vline(xintercept=1999, color='blue', linetype='dashed') +
+    labs(
+        title="Babies named 'Maia': Outlier Years and Trends",
+        subtitle="Outliers highlighted in red with labels",
+        x="Year",
+        y="Total Babies Named Maia"
+    ) +
+    #Gives chart a clean, uncluttered look for clarity
+    theme_minimal() +
+    #Remove legend because everything is explained visually
+    theme(legend_position='none')
+)
+
+
+```
+
+
+## If you talked to someone named Brittany on the phone, what is your guess of his or her age? What ages would you not guess?
+The popularity of the name 'Brittany' peaked in the year 1990. The graph and trend lines show a rapid increas in popularity up to that year, followed by a rapid decline. Based on this data, I would guess that someone on the phone named Brittany would be in their early 30s because the peak year. I would not expect someone significantly younger such as 20 or significantly older over 40 to have this name, since its popularity was heavily concentrated in that narrow time window.
+
+```{python}
+
+#Similar to what I did earlier, filers the dataset to only the rows where the baby name is "Brittany"
+#The .copy() lets me work with a clean, independent copy of the data. That way it doesn't use mine from earlier
+brittany_df = df[df['name'] == 'Brittany'].copy()
+
+#Filters data by year and give the total of all babies named Brittany across all states for each year
+brittany_df = brittany_df.groupby('year', as_index=False)['Total'].sum()
+
+#Finds peak year (using max) that name had highest total count
+#.values[0] extracts the actual year number as an integer otherwise it will return as a pandas series
+peak_year = brittany_df[brittany_df['Total'] == brittany_df['Total'].max()]['year'].values[0]
+
+#prints output of results
+print(f"Brittany peaked in: {peak_year}")
+
+```
+
+```{python}
+(
+    ggplot(brittany_df, aes(x='year', y='Total')) +
+
+    #draws a purple line showing the popularity trend, typing 'purple' didn't seem to work, had to use the color code for purple. I wanted to try a different color besides black
+    geom_line(color='#FF1493', size=1.2) +  
+
+    #highlights using smooth line the general trend over time, easier to see rise and fall of name's popularity
+    geom_smooth(se=False, method='loess', color='black') +
+
+    #marks the peak year with red dashed line, making it easier to see
+    geom_vline(xintercept=peak_year, color='red', linetype='dashed', size=1) +
+    labs(
+        title="Popularity of the Name 'Brittany' Over Time",
+        subtitle=f"Peak year: {peak_year}",
+        x="Year",
+        y="Total Babies Named Brittany"
+    ) +
+
+    #removes chart clutter and emphasizes the data
+    theme_minimal()
+)
+
+
+```
+
+
+## Mary, Martha, Peter, and Paul are all Christian names. From 1920 - 2000, compare the name usage of each of the four names in a single chart. What trends do you notice?
+
+From 1920 - 2000, all four names show unique trends in popularity. This data shows that Mary reached it's popularity peak in the early to mid-1900s before its steady deciline afters the 60's. Martha shows a much more mild curve with a slower decline that begins around the 1950's. Paul had a mid peak but immediatley declined in popularity after the 1970's The data conveys that Peter is a consistently popular name that peaked during the mid-century and has gradually declined since. These patterns reflect shifts in cultural religious naming trends over the decades. It would be interesting to compare the name Peter with not just the Christian name, but Spider-man movie releases, which I believe would popularize the name Peter (Spider-man's name is Peter Parker).
+
+```{python}
+
+#Assigns the Christian names to the name variable
+names = ['Mary', 'Martha', 'Peter', 'Paul']
+
+#Filters the dataset to pull the four target names, also keeps the search between 1920 - 2000
+df_subset = df[df['name'].isin(names) & df['year'].between(1920, 2000)].copy()
+
+#Groups and sums the total column across all states for each name during the outlines years
+grouped = df_subset.groupby(['year', 'name'], as_index=False)['Total'].sum()
+
+( #Plots one line per name, colored distinctly
+    ggplot(grouped, aes(x='year', y='Total', color='name')) +
+    geom_line(size=1.2) +
+    labs(
+        title="Name Usage of Mary, Martha, Peter, and Paul (1920–2000)",
+        subtitle="Christian names over time",
+        x="Year",
+        y="Total Babies Named",
+    ) +
+    #Clean and professional appearance
+    theme_minimal()
+)
+
+```
+
+
+## Think of a unique name from a famous movie. Plot the usage of that name and see how changes line up with the movie release. Does it look like the movie had an effect on usage?
+
+One of the most popular films to be released in the year 2013 was Disney's Frozen. After this movie there was a surge in popularity. The chart shows the release year with a dashed black line. An immediate increase following that year reflects how influential the movie was in shaping modern baby name trends. The name did exist before the movie and appeared to have a gradual increase before but it peaked after the movie release. However, after 2015, it began to decline again.
+
+```{python}
+
+# Filter and group data for the name 'Elsa'. The df keeps only rows where the name is "Elsa".
+#.copy() makes copy of the filtered data.
+elsa_df = df[df['name'] == 'Elsa'].copy()
+
+#grouped/groupby turns it into a small df with two columns: year and total
+elsa_grouped = elsa_df.groupby('year', as_index=False)['Total'].sum()
+
+# Plot the trend with Frozen-style colors
+(
+    ggplot(elsa_grouped, aes(x='year', y='Total')) +
+    geom_line(color='#39FF14', size=1.8) +  # light sky blue
+    geom_smooth(se=False, method='loess', color='#4682B4') +  # steel blue smooth trend
+    geom_vline(xintercept=2013, color='black', linetype='dashed', size=1.2) + 
+    labs(
+        title="Name 'Elsa' and the Impact of *Frozen*",
+        subtitle="Dashed line marks the 2013 Disney release",
+        x="Year",
+        y="Total Babies Named Elsa",
+    ) +
+    #Creates a clean visual and removes unnecessary clutter
+    theme_minimal()
+)
+
+```
+
+---
+
+## STRETCH: Reproduce the chart Elliot using the data from the `names_year.csv` file.
+
+Looking at the graph it shows there wasn't a huge popularity of the name Elliot until after a spike in 1982. This spike suggests that the popularity of the movie E.T. had a great influence on the popularity of the name Elliot. After the initial release there was a spike followed by a step decline. After the second release there was another increase and spike right around 1989 followed by a much more gradual decline. Howoever after ther third release there was a much more gradual incline in popularity. This continued popularity suggests that it can gain popularity on its own after being introduced. 
+
+```{python}
+
+elliot_df = df[df['name'] == 'Elliot'].copy()
+
+#groupeed/groupby puts year and sum total counts
+elliot_grouped = elliot_df.groupby('year', as_index=False)['Total'].sum()
+
+# Limits years 1950–2020
+elliot_grouped = elliot_grouped[elliot_grouped['year'].between(1950, 2020)]
+
+elliot_grouped['name'] = 'Elliot'
+
+# Reference lines for E.T. movie releases
+ref_lines = pd.DataFrame({
+    'year': [1982, 1985, 2002],
+    'label': ['E.T. Released', 'Second Release', 'Third Release'],
+    'y': [1100, 1100, 1100] 
+})
+(
+    ggplot(elliot_grouped, aes(x='year', y='Total', color='name')) +  # uses 'name' for legend title
+    geom_line(size=.5) +  # purple/blue line
+    scale_color_manual(values={"Elliot": "#6A5ACD"}, name="Name") + 
+
+    # Vertical dashed red lines at key movie release years
+    geom_vline(data=ref_lines, mapping=aes(xintercept='year'),
+               color='red', linetype='dashed') +
+
+    # Horizontal black text labels just above each red line
+    geom_text(
+        data=ref_lines,
+        mapping=aes(x='year', y='y', label='label'),
+        angle=0,
+        hjust=0.8,
+        vjust=-0.5,
+        size=4.5,
+        color='black',
+        fontface='bold'
+    ) +
+
+    # Titles and axis labels
+    labs(
+        title="Elliot... What?",
+        x="Year",
+        y="Total",
+    ) +
+
+    # Lock axis limits
+    scale_x_continuous(limits=[1950, 2020]) +
+    scale_y_continuous(limits=[0, 1200]) +
+
+    # Clean visual appearance
+    theme_minimal()
+)
+```
+
+---
