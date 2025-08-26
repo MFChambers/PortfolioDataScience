@@ -5,47 +5,99 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Maia Chambers – Data Science Portfolio</title>
   <style>
-    :root { --bg:#f9fafb; --fg:#111; --card:#fff; --link:#2563eb; }
-    * { box-sizing: border-box; }
-    body {
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      margin: 2rem auto;
-      max-width: 1100px;
-      padding: 0 1rem;
-      line-height: 1.6;
-      background: var(--bg);
-      color: var(--fg);
+  /* Design tokens */
+  :root{
+    --bg:#f9fafb; --fg:#111827; --card:#ffffff; --muted:#4b5563; --link:#2563eb;
+    --border:rgba(0,0,0,.06); --shadow:0 2px 10px rgba(0,0,0,.08);
+    --shadow-lg:0 10px 28px rgba(0,0,0,.18);
+  }
+  /* Auto-dark if user prefers and no manual choice stored */
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme]) {
+      --bg:#0b0e11; --fg:#e5e7eb; --card:#111827; --muted:#9ca3af; --link:#93c5fd;
+      --border:rgba(255,255,255,.08); --shadow:0 2px 12px rgba(0,0,0,.6);
+      --shadow-lg:0 16px 36px rgba(0,0,0,.7);
     }
-    h1 { font-size: 2rem; margin: 0 0 .5rem; }
-    h2 { margin: 2rem 0 1rem; font-size: 1.25rem; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-      margin-top: .5rem;
-    }
-    .card {
-      background: var(--card);
-      border-radius: 12px;
-      padding: 1rem 1.25rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-    .card:hover { transform: translateY(-4px); box-shadow: 0 6px 18px rgba(0,0,0,.12); }
-    .card h3 { margin: 0 0 .35rem; font-size: 1.05rem; }
-    .card p { margin: 0; font-size: .95rem; }
-    a { color: var(--link); text-decoration: none; font-weight: 600; }
-    a:hover { text-decoration: underline; }
-    .sub { margin: .25rem 0 1rem; color: #374151; }
-    footer { margin: 3rem 0 1rem; font-size: .9rem; color: #6b7280; }
-    footer a { font-weight: 500; }
-  </style>
+  }
+  /* Manual dark mode */
+  :root[data-theme="dark"]{
+    --bg:#0b0e11; --fg:#e5e7eb; --card:#111827; --muted:#9ca3af; --link:#93c5fd;
+    --border:rgba(255,255,255,.08); --shadow:0 2px 12px rgba(0,0,0,.6);
+    --shadow-lg:0 16px 36px rgba(0,0,0,.7);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    margin:2rem auto; max-width:1100px; padding:0 1rem; line-height:1.6;
+    background:var(--bg); color:var(--fg);
+  }
+  h1{font-size:2rem;margin:0 0 .5rem}
+  .sub{margin:.25rem 0 1rem;color:var(--muted)}
+  a{color:var(--link);text-decoration:none;font-weight:600}
+  a:hover{text-decoration:underline}
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:1.25rem; margin-top:.75rem;
+  }
+  .card{
+    background:var(--card); border-radius:14px; padding:1rem 1.25rem;
+    border:1px solid var(--border); box-shadow:var(--shadow);
+    transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+  .card:hover{ transform:translateY(-3px); box-shadow:var(--shadow-lg); }
+  .card h3{margin:0 0 .35rem; font-size:1.05rem}
+  .card p{margin:0; font-size:.95rem; color:var(--muted)}
+
+  footer{margin:3rem 0 1rem; font-size:.9rem; color:var(--muted)}
+
+  /* Theme toggle button */
+  .theme-toggle{
+    border:1px solid var(--border); background:var(--card); color:var(--fg);
+    border-radius:999px; padding:.45rem .7rem; font-size:1rem; line-height:1;
+    box-shadow:var(--shadow); cursor:pointer; display:inline-flex; gap:.5rem;
+    align-items:center; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .theme-toggle:hover{ transform:translateY(-1px); box-shadow:var(--shadow-lg); }
+  .header-bar{display:flex; align-items:center; justify-content:space-between; gap:1rem;}
+</style>
 </head>
+<script>
+(function () {
+  const root = document.documentElement;
+  const btn  = document.getElementById('theme-toggle');
+  const saved = localStorage.getItem('theme');           // 'light' | 'dark' | null
+  if (saved) root.setAttribute('data-theme', saved);
+
+  function isDark(){
+    const explicit = root.getAttribute('data-theme');
+    if (explicit) return explicit === 'dark';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches;
+  }
+  function updateBtn(){
+    const dark = isDark();
+    btn.textContent = dark ? '☀️' : '🌙';
+    btn.setAttribute('aria-pressed', String(dark));
+    btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+  }
+  btn.addEventListener('click', () => {
+    const next = isDark() ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('theme', next);
+    updateBtn();
+  });
+  updateBtn();
+})();
+</script>
 <body>
-  <header>
+    <header class="header-bar">
+  <div>
     <h1>Maia Chambers – Data Science Portfolio</h1>
-    <p class="sub">Quarto + Python (pandas) + SQL projects</p>
-  </header>
+    <p class="sub">This portfolio highlights a compilation of applied data science projects—cleaning, analysis, visualization, and modeling—using real-world datasets to uncover insights with Python, SQL, and data visualization.</p>
+  </div>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Toggle color theme" aria-pressed="false">🌙</button>
+</header>
 
   <div class="grid">
   <div class="card">
