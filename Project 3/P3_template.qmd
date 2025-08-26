@@ -1,6 +1,6 @@
 ---
 title: "Client Report - Late Flights & Missing Data (JSON)"
-subtitle: "Course DS 250"
+subtitle: "This project analyzed U.S. flight delay data stored in JSON format, using Python (pandas, numpy) and Lets-Plot for cleaning, exploration, and visualization. The focus was on missing data handling, airport comparisons, and delay causes."
 author: "[Maia Faith Chambers]"
 format:
   html:
@@ -42,6 +42,26 @@ df = pd.read_json("https://github.com/byuidatascience/data4missing/raw/master/da
 
 df.columns.to_list()
 ```
+
+## Client Request:
+The client provided a JSON dataset on U.S. flight activity and delays. They want missing values standardized, a clear picture of which airports experience the worst delays, and insights on when and why delays occur. They are especially interested in:
+    * Identifying the worst airports for delays.
+    * Determining the best month to fly to avoid disruptions.
+    * Understanding the impact of weather on delays.
+
+# Summary of overall project work
+
+* Data Cleaning: Standardized missing values (replacing placeholders like 999 and empty strings with NaN) and reformatted airport codes for consistency.
+* Worst Airports: Found that IAD (Washington Dulles) had the highest proportion of delayed flights (frequency), while ORD (Chicago O’Hare) had the longest average delays (severity).
+* Best Month to Fly: September was identified as the most reliable month for avoiding delays.
+* Weather Impacts: Created a new composite variable combining severe and mild weather delays, showing ORD and SFO as most affected.
+
+Additional Analysis: 
+    * Compared delay types, revealing that weather delays dominate (6.5%), followed by carrier delays (3.8%), while security delays are negligible (<0.1%).
+    * This project demonstrates applied skills in JSON parsing, missing data treatment, feature engineering, and data visualization for real-world operational insights.
+
+Tools/Packages: SQL (sqlite3), Python (pandas, numpy), Lets-Plot
+
 
 ## Elevator pitch
 The analysis I did discovers that SLC airport had the highest proportion of delayed flights, February was the most punctual month to travel. Weather-related delays were more prevalent in late summer and winter, with SFO airport experiencing the greatest weather impact.

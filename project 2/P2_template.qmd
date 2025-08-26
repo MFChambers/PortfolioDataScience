@@ -36,6 +36,26 @@ sqlite_file = 'lahmansbaseballdb.sqlite'
 con = sqlite3.connect(sqlite_file)
 ```
 
+## Client Request:
+The client would like SQL queries that can be used to retrieve baseball data for direct use on their website, without requiring Python processing. They also request that the results be visualized with Lets-Plot charts to highlight key patterns and insights in the data.
+
+# Summary of overall project work
+
+This project explored Major League Baseball data using SQL (sqlite3) for querying, and Python (pandas, numpy, lets-plot) for data analysis and visualization. The client requested reusable SQL queries for their website along with charts that highlight trends and insights.
+
+    * BYU-Idaho Alumni in MLB: Queried salary and career data for two alumni (Mark Lindsma and Garrett Stephenson) and visualized their career earnings over time.
+
+    * Batting Averages: Calculated batting averages at the season level (1+ at-bats, 10+ at-bats) and at the career level (100+ at-bats). Results surfaced consistent top performers such as Ty Cobb and Rogers Hornsby, showing the importance of applying thresholds to filter out statistical flukes.
+
+    * Team Salary Comparison: Compared the Seattle Mariners and Texas Rangers average salaries across decades, showing steady growth for both but sharper spikes for the Rangers. This analysis raised questions about the link between payroll size and performance.
+
+Additional Analyses:
+
+    * Salary Distribution by Position: Used a case statement to categorize positions into high, medium, or low salary groups, showing how financial value is distributed by role.
+
+    * Career Longevity: Identified the top 10 longest MLB careers (10+ games played) and calculated the league-wide average career length, providing insights into player durability.
+
+Tools/Packages: SQL (sqlite3), Python (pandas, numpy), Lets-Plot
 
 ```{python}
 # Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
@@ -43,7 +63,7 @@ con = sqlite3.connect(sqlite_file)
 
 ```
 
-## QUESTION|TASK 1
+## CLIENT TASK 1
 
 __Write an SQL query to create a new dataframe about baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, and the yearID/teamID associated with each salary. Order the table by salary (highest to lowest) and print out the table in your report.__  
 
@@ -106,7 +126,7 @@ ggplot(df_salaries, aes(x='yearID', y='salary', color=as_discrete('playerID'))) 
 ```
 
 
-## QUESTION|TASK 2
+## CLIENT TASK 2
 
 __This three-part question requires you to calculate batting average (number of hits divided by the number of at-bats)__  
     a. Write an SQL query that provides playerID, yearID, and batting average for players with at least 1 at bat that year. Sort the table from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.  
@@ -181,7 +201,7 @@ df_2c
 ```
 
 
-## QUESTION|TASK 3
+## CLIENT TASK 3
 
 __Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Write an SQL query to get the data you need, then make a graph using Lets-Plot to visualize the comparison. What do you learn?__
 
@@ -231,9 +251,7 @@ ggplot(df_task3_mr, aes(x='yearID', y='avg_salary', color=as_discrete('teamID'))
 
 ---
 
-## STRETCH QUESTION|TASK 1
-
-__Advanced Salary Distribution by Position (with Case Statement):__  
+## Advanced Salary Distribution by Position (with Case Statement):
 
     * Write an SQL query that provides a summary table showing the average salary for each position (e.g., pitcher, catcher, outfielder). Position information can be found in the fielding table in the POS column. 
     
@@ -256,9 +274,6 @@ __Advanced Salary Distribution by Position (with Case Statement):__
 
     **Hint:** Beware, it is common for a player to play multiple positions in a single year. For this analysis, each player’s salary should only be counted toward one position in a given year: the position at which they played the most games that year. This will likely require a (sub-query)[https://docs.data.world/documentation/sql/concepts/advanced/WITH.html].
 
-    
-
-_type your results and analysis here_
 
 ```{python}
 # Include and execute your code here
@@ -322,9 +337,7 @@ df_salary_by_position
 ```
 
 
-## STRETCH QUESTION|TASK 2
-
-__Advanced Career Longevity and Performance (with Subqueries):__
+## Advanced Career Longevity and Performance (with Subqueries):
 
     * Calculate the average career length (in years) for players who have played at least **10 games**. Then, identify the top 10 players with the longest careers (based on the number of years they played). Include their: 
 

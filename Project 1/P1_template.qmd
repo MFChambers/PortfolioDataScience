@@ -1,6 +1,6 @@
 ---
 title: "Client Report - What's in a Name?"
-subtitle: "Course DS 250"
+subtitle: "In response to a client request, I analyzed U.S. baby name data to explore how name usage has shifted over time. The dataset contained yearly counts of names given to children, allowing for both historical trends and cultural insights."
 author: "Maia Faith Chambers"
 format:
   html:
@@ -36,6 +36,22 @@ df = pd.read_csv("https://github.com/byuidatascience/data4names/raw/master/data-
 
 ```
 
+## Client Request: 
+The dataset provided contains yearly counts of baby names in the United States. The client, who has a passion for historical naming patterns, would like an analysis of how name usage has changed over time. They are particularly interested in the names Mary, Martha, Peter, and Paul. In addition, they would like to see how the popularity of a name from a well-known movie has shifted following its release.
+
+# Summary of overall project work. 
+
+Key deliverables included:
+
+ Personalization & historical context: Compared the popularity of my own name (Maia) at my birth year against its historical usage.
+
+ Generational inference: Examined names like Brittany, identifying sharp peaks (around 1990) that allow us to infer likely age ranges.
+
+ Client’s focus names: Analyzed Mary, Martha, Peter, and Paul from 1920–2000, highlighting cultural and religious trends in naming.
+
+ Pop culture impact: Investigated names from movies (Elsa from Frozen and Elliot from E.T.), showing clear surges in popularity following major film releases.
+
+This project demonstrates how demographic data, when paired with visualization, can answer client-driven questions, uncover cultural patterns, and tell engaging stories about history and identity.
 
 ## How does your name at your birth year compare to its use historically?
 
@@ -240,7 +256,7 @@ elsa_grouped = elsa_df.groupby('year', as_index=False)['Total'].sum()
 
 ---
 
-## STRETCH: Reproduce the chart Elliot using the data from the `names_year.csv` file.
+## Popularity of the Name Elliot Over Time
 
 Looking at the graph it shows there wasn't a huge popularity of the name Elliot until after a spike in 1982. This spike suggests that the popularity of the movie E.T. had a great influence on the popularity of the name Elliot. After the initial release there was a spike followed by a step decline. After the second release there was another increase and spike right around 1989 followed by a much more gradual decline. Howoever after ther third release there was a much more gradual incline in popularity. This continued popularity suggests that it can gain popularity on its own after being introduced. 
 

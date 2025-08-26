@@ -1,6 +1,6 @@
 ---
-title: "Client Report - The War with Star Wars"
-subtitle: "Course DS 250"
+title: "Client Report 5 - Star Wars Survey: Income Prediction & Data Validation"
+subtitle: "Analyzed the FiveThirtyEight Star Wars survey using Python (pandas, NumPy, scikit-learn), Matplotlib, and Quarto to validate the public dataset and predict respondent income."
 author: "Maia Faith Chambers"
 format:
   html:
@@ -24,7 +24,22 @@ execute:
   warning: false
 ---
 
-!pip install matplotlib
+## Client Request:
+The client conducted a Star Wars–themed survey and outsourced analysis. They want the data cleaned and standardized, verification that the GitHub dataset matches the original article by recreating key visuals, and a machine-learning model that predicts whether a respondent earns more than $50k. Deliverables include clear preprocessing steps, readable column names, and model performance with standard metrics.
+
+# Summary of overall project work
+
+    * Data cleaning & renaming: Shortened verbose survey columns; standardized categories; mapped age/education/income to numeric fields; created a binary target (> $50k); one-hot encoded remaining categoricals.
+    * Validation: Recreated two+ visuals from the article (viewership and character sentiment), confirming the dataset aligns with published findings.
+    * Modeling: Trained a Random Forest Classifier on cleaned features; achieved ~75.7% accuracy (exceeds the 65% goal). Reported a full classification report and confusion matrix; showed stronger performance identifying high-income respondents.
+
+Additional Analysis: 
+    * Tuned hyperparameters (n_estimators, max_depth) with comparable performance; added a third validation visual; encoded location numerically for modeling.
+
+Tools/Packages: pandas, NumPy, scikit-learn (RandomForestClassifier), Matplotlib, Quarto.
+
+Data hygiene notes: Avoided leakage by dropping income_num from features after creating the target; handled missing values before modeling.
+
 
 
 ```{python}
