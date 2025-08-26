@@ -1,6 +1,6 @@
 ---
 title: "Client Report - Project 0: Introduction"
-subtitle: "Course DS 250"
+subtitle: "Course DS 25"
 author: "[Maia Faith Chambers]"
 format:
   html:
@@ -30,8 +30,7 @@ import pandas as pd
 import numpy as np
 from lets_plot import *
 
-
-LetsPlot.setup_html(isolated_frame=True)
+LetsPlot.setup_html()
 ```
 
 
@@ -40,7 +39,7 @@ from palmerpenguins import load_penguins
 df = load_penguins()
 
 ggplot(df, aes(x="species")) + geom_bar()
-df.head()
+df.head(10)
 ```
 
 ## Include the tables created from PY4DS: CH2 Data Visualization used to create the above chart
@@ -51,7 +50,6 @@ __ [PY4DS: CH2 Data Visualization](https://aeturrell.github.io/python4DS/data-vi
 ```{python}
 # Include and execute your code here
 penguins = load_penguins()
-penguins
 penguins.head()
 
 ```

@@ -21,7 +21,9 @@ format:
       toggle: true
       caption: See code
 execute: 
-  warning: false
+  kernel: python3
+  python: /Library/Frameworks/Python.framework/Versions/3.12/bin/python3
+
 ---
 
 ```{python}
@@ -30,12 +32,21 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.tree import DecisionTreeClassifier, plot_tree, export_graphviz
-from sklearn.ensemble import RandomForestClassifier
+
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, precision_score, recall_score, classification_report, confusion_matrix
-import graphviz
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score,
+    classification_report, confusion_matrix,
+    mean_squared_error, r2_score, median_absolute_error
+)
+try:
+    from xgboost import XGBClassifier
+    HAS_XGB = True
+except Exception:
+    HAS_XGB = False
 
 # Load dataset
 url = "https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv"
@@ -43,14 +54,26 @@ df = pd.read_csv(url)
 
 # Prepare data
 df['stories_str'] = df['stories'].astype(str)
-df['numbaths_grouped'] = pd.cut(df['numbaths'], bins=[0, 1, 2, 3, 4, np.inf], labels=['<=1', '1-2', '2-3', '3-4', '4+'])
-df['livearea_grouped'] = pd.cut(df['livearea'], bins=[0, 1000, 1500, 2000, 2500, np.inf], labels=['<1000', '1000-1500', '1500-2000', '2000-2500', '2500+'])
 
-# Add labels
+df['numbaths_grouped'] = pd.cut(
+    df['numbaths'],
+    bins=[0, 1, 2, 3, 4, np.inf],
+    labels=['<=1', '1-2', '2-3', '3-4', '4+'],
+    include_lowest=True
+)
+
+df['livearea_grouped'] = pd.cut(
+    df['livearea'],
+    bins=[0, 1000, 1500, 2000, 2500, np.inf],
+    labels=['<1000', '1000-1500', '1500-2000', '2000-2500', '2500+'],
+    include_lowest=True
+)
+
+# Labels for plotting/interpretation
 df['before1980_label'] = df['before1980'].map({0: "Built 1980+", 1: "Built Before 1980"})
 df['before1980_num'] = df['before1980']
 
-# Set styling
+# Plot styling
 sns.set(style="whitegrid")
 custom_palette = {"Built 1980+": "#00BFC4", "Built Before 1980": "#F8766D"}
 ```
@@ -63,6 +86,7 @@ These visualizations show potential relationships that a machine learning model 
 
 ```{python}
 # Chart A: Grouped bathrooms
+# Chart A: Grouped bathrooms
 plt.figure(figsize=(8, 5))
 sns.countplot(data=df, x='numbaths_grouped', hue='before1980_label', palette=custom_palette)
 plt.title('Grouped Number of Bathrooms vs. Year Built')
@@ -70,6 +94,7 @@ plt.xlabel('Number of Bathrooms')
 plt.ylabel('Count')
 plt.tight_layout()
 plt.show()
+
 
 ```
 
@@ -118,19 +143,33 @@ Random Forest: approximately 80.3% accuracy, with stronger generalization than a
 
 
 ```{python}
-# Features
-features = df.drop(columns=['before1980_num', 'yrbuilt','parcel'])
-#features = features.fillna(0)
+# Use only numeric, non-leaky features
+use_cols = [
+    'livearea', 'stories', 'numbaths',
+    'numbaths_grouped', 'livearea_grouped', 'stories_str'
+]
 
-# Target
-target = df['before1980_num']
+X = df[use_cols].copy()
+
+# One-hot encode categorical/string columns -> numeric dummies
+X = pd.get_dummies(
+    X,
+    columns=['numbaths_grouped', 'livearea_grouped', 'stories_str'],
+    drop_first=True
+).fillna(0)
+
+y = df['before1980_num']
 ```
 ```{python}
-# Split data
-X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.3, random_state=42)
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.30, random_state=42, stratify=y
+)
 
 # Decision Tree
-clf_tree = DecisionTreeClassifier(max_depth=5, min_samples_leaf=50, criterion='entropy', random_state=42)
+clf_tree = DecisionTreeClassifier(
+    max_depth=5, min_samples_leaf=50, criterion='entropy', random_state=42
+)
 clf_tree.fit(X_train, y_train)
 y_pred_tree = clf_tree.predict(X_test)
 tree_acc = accuracy_score(y_test, y_pred_tree)
@@ -147,7 +186,6 @@ y_pred_rf = clf_rf.predict(X_test)
 rf_acc = accuracy_score(y_test, y_pred_rf)
 print(f"Random Forest Accuracy: {rf_acc:.2%}")
 
-
 ```
 
 ```{python}
@@ -157,6 +195,7 @@ clf_lr.fit(X_train, y_train)
 y_pred_lr = clf_lr.predict(X_test)
 lr_acc = accuracy_score(y_test, y_pred_lr)
 print(f"Logistic Regression Accuracy: {lr_acc:.2%}")
+
 ```
 None of the models tested reached the 90% accuracy goal. However, Random Forest provides the best balance of interpretability, robustness, and predictive performance for a classification baseline. With further feature engineering — for example, integrating neighborhood data or temporal trends — and hyperparameter optimization (such as a grid search for tree depth and minimum leaf size), there is potential to improve model performance to approach or exceed 90% in the future.
 
@@ -170,10 +209,10 @@ The second most important feature was number of bathrooms (numbaths). Newer home
 The number of stories (stories) feature also contributed to the classification model, although with a lower importance score. This is still valuable because single-story homes were historically more common in earlier decades, whereas modern subdivisions often include two-story designs.
 
 ```{python}
-# Decision Tree importance
-importance_tree = pd.Series(clf_tree.feature_importances_, index=features.columns).sort_values()
+# Decision Tree feature importance
+importance_tree = pd.Series(clf_tree.feature_importances_, index=X.columns).sort_values()
 plt.figure(figsize=(8, 5))
-importance_tree.plot(kind='barh', color='lightseagreen', edgecolor='black')
+importance_tree.plot(kind='barh', edgecolor='black')
 plt.title('Decision Tree Feature Importance')
 plt.xlabel('Importance Score')
 plt.tight_layout()
@@ -182,14 +221,15 @@ plt.show()
 ```
 
 ```{python}
-# Random Forest importance
-importance_rf = pd.Series(clf_rf.feature_importances_, index=features.columns).sort_values()
+# Random Forest feature importance
+importance_rf = pd.Series(clf_rf.feature_importances_, index=X.columns).sort_values()
 plt.figure(figsize=(8, 5))
-importance_rf.plot(kind='barh', color='salmon', edgecolor='black')
+importance_rf.plot(kind='barh', edgecolor='black')
 plt.title('Random Forest Feature Importance')
 plt.xlabel('Importance Score')
 plt.tight_layout()
 plt.show()
+
 ```
 These patterns are visualized in the accompanying feature importance chart below, which shows the ranked contribution of each feature to the model. The chart confirms that living area, number of bathrooms, and number of stories are the dominant variables. Overall, these variables align with real-world domain knowledge about housing design and construction patterns and justify the model’s predictions in a way that is explainable and transparent for stakeholders.
 
@@ -204,18 +244,21 @@ Accuracy measures the overall proportion of correct predictions across both clas
 print("Decision Tree Evaluation:")
 print(classification_report(y_test, y_pred_tree))
 print(confusion_matrix(y_test, y_pred_tree))
+
 ```
 Precision measures how many predicted positives were actually correct. For example, Random Forest had a precision of 0.84 for the positive (before1980) class, meaning when it predicts a home is pre-1980, it is correct 84% of the time. Precision is especially important if a false positive (wrongly classifying a newer home as old) has public health or safety consequences, such as unnecessary asbestos remediation.
 ```{python}
 print("\nRandom Forest Evaluation:")
 print(classification_report(y_test, y_pred_rf))
 print(confusion_matrix(y_test, y_pred_rf))
+
 ```
 Recall measures how many true positives were captured among all actual positives. The Random Forest achieved a recall of 0.85 for the positive class, meaning it correctly identified 85% of homes that were truly built before 1980. High recall is crucial if you want to avoid missing any potentially hazardous homes.
 ```{python}
 print("\nLogistic Regression Evaluation:")
 print(classification_report(y_test, y_pred_lr))
 print(confusion_matrix(y_test, y_pred_lr))
+
 ```
 As a balanced measure, the f1-score combines precision and recall, showing the Random Forest at 0.84 for the positive class, which is a solid compromise between missing too many cases and misclassifying safe homes.
 
@@ -225,7 +268,7 @@ Overall, while no model reached the 90% accuracy target, the Random Forest achie
 
 ---
 
-## STRETCH QUESTION|TASK 1
+## ADDITIONAL |TASK 1
 
 For this stretch question, I tested three different algorithms to classify whether a home was built before 1980: Random Forest, Logistic Regression, and XGBoost. Each model was evaluated with a confusion matrix and either feature importance or coefficient values.
 
@@ -236,22 +279,13 @@ Random Forest’s feature importances and XGBoost’s results both confirmed thi
 If yrbuilt is removed (which it should be, since you wouldn’t know it when predicting), Random Forest is still the strongest option. In earlier testing without yrbuilt, it achieved around 80% accuracy with a good balance of precision and recall. That makes it the most reliable recommendation for the client right now, with potential for improvement if more features or neighborhood data are added in the future.
 
 ```{python}
-# Stretch Task 1 (corrected - no leakage)
-from xgboost import XGBClassifier
-
-# load from URL
-url = "https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv"
 joined = pd.read_csv(url)
 
-# target
-y = joined["before1980"]
+y_st = joined["before1980"]
+X_st = joined.drop(joined.filter(regex="before1980|yrbuilt|parcel").columns, axis=1).fillna(0)
 
-# drop leakage columns (yrbuilt and parcel)
-X = joined.drop(joined.filter(regex="before1980|yrbuilt|parcel").columns, axis=1)
-X = X.fillna(0)
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, stratify=y, random_state=42
+X_tr, X_te, y_tr, y_te = train_test_split(
+    X_st, y_st, test_size=0.2, stratify=y_st, random_state=42
 )
 
 def print_model_results(model, X_test, y_test, feature_names=None):
@@ -260,35 +294,38 @@ def print_model_results(model, X_test, y_test, feature_names=None):
     print(f"\n{model.__class__.__name__} Confusion Matrix:")
     print(pd.DataFrame(cm, index=["Actual 0", "Actual 1"], columns=["Pred 0", "Pred 1"]))
     print(classification_report(y_test, preds))
-    if hasattr(model, "feature_importances_"):
-        fi = pd.Series(model.feature_importances_, index=feature_names)
-        print("Feature Importances:")
-        print(fi.sort_values(ascending=False))
-    elif hasattr(model, "coef_"):
-        coefs = pd.Series(model.coef_[0], index=feature_names)
-        print("Coefficients:")
-        print(coefs.sort_values(ascending=False))
+    if hasattr(model, "feature_importances_") and feature_names is not None:
+        fi = pd.Series(model.feature_importances_, index=feature_names).sort_values(ascending=False)
+        print("\nTop Feature Importances:")
+        print(fi.head(10))
+    elif hasattr(model, "coef_") and feature_names is not None:
+        coefs = pd.Series(model.coef_[0], index=feature_names).sort_values(ascending=False)
+        print("\nTop Coefficients:")
+        print(coefs.head(10))
 
 # 1. Random Forest
 rf = RandomForestClassifier(random_state=42)
-rf.fit(X_train, y_train)
-print_model_results(rf, X_test, y_test, X.columns)
+rf.fit(X_tr, y_tr)
+print_model_results(rf, X_te, y_te, X_st.columns)
 
 # 2. Logistic Regression
 lr = LogisticRegression(max_iter=1000)
-lr.fit(X_train, y_train)
-print_model_results(lr, X_test, y_test, X.columns)
+lr.fit(X_tr, y_tr)
+print_model_results(lr, X_te, y_te, X_st.columns)
 
-# 3. XGBoost
-xgb = XGBClassifier(random_state=42, use_label_encoder=False, eval_metric="logloss")
-xgb.fit(X_train, y_train)
-print_model_results(xgb, X_test, y_test, X.columns)
+# 3. XGBoost (optional if installed)
+if HAS_XGB:
+    xgb = XGBClassifier(random_state=42, use_label_encoder=False, eval_metric="logloss")
+    xgb.fit(X_tr, y_tr)
+    print_model_results(xgb, X_te, y_te, X_st.columns)
+else:
+    print("\n[XGBoost not installed — skipping XGBClassifier in Stretch Task 1]")
 
 
 ```
 
 
-## STRETCH QUESTION|TASK 2
+## ADDITIONAL |TASK 2
 
 After merging the neighborhood data with the dwellings data, I reran the same three algorithms: Random Forest, Logistic Regression, and XGBoost. All three models showed perfect or near-perfect accuracy again, with 100% classification rates, which is a strong indicator of data leakage. This happened because the yrbuilt column was still included as a feature after joining, which lets the models essentially memorize the answer.
 
@@ -299,48 +336,42 @@ Because of this, the results with the merged dataset do not actually change the 
 In short, joining the neighborhood data did not meaningfully improve the models when yrbuilt was present, but could be helpful in the future if handled carefully and after removing data leakage.
 
 ```{python}
-# Stretch Task 2 (corrected - no leakage)
+# Neighborhood join with leakage columns removed
 
-# get neighborhood data from URL:
 neigh_url = "https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_neighborhoods_ml/dwellings_neighborhoods_ml.csv"
-dwell_url = "https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv"
+dwell_url = url
 
 neigh = pd.read_csv(neigh_url)
 dwell = pd.read_csv(dwell_url)
 
-# merge
 joined2 = dwell.merge(neigh, on="parcel", how="left")
 
-# target
 y2 = joined2["before1980"]
+X2 = joined2.drop(joined2.filter(regex="before1980|yrbuilt|parcel").columns, axis=1).fillna(0)
 
-# drop leakage columns
-X2 = joined2.drop(joined2.filter(regex="before1980|yrbuilt|parcel").columns, axis=1)
-X2 = X2.fillna(0)
-
-X2_train, X2_test, y2_train, y2_test = train_test_split(
+X2_tr, X2_te, y2_tr, y2_te = train_test_split(
     X2, y2, test_size=0.2, stratify=y2, random_state=42
 )
 
-# 1. Random Forest
 rf2 = RandomForestClassifier(random_state=42)
-rf2.fit(X2_train, y2_train)
-print_model_results(rf2, X2_test, y2_test, X2.columns)
+rf2.fit(X2_tr, y2_tr)
+print_model_results(rf2, X2_te, y2_te, X2.columns)
 
-# 2. Logistic Regression
 lr2 = LogisticRegression(max_iter=1000)
-lr2.fit(X2_train, y2_train)
-print_model_results(lr2, X2_test, y2_test, X2.columns)
+lr2.fit(X2_tr, y2_tr)
+print_model_results(lr2, X2_te, y2_te, X2.columns)
 
-# 3. XGBoost
-xgb2 = XGBClassifier(random_state=42, use_label_encoder=False, eval_metric="logloss")
-xgb2.fit(X2_train, y2_train)
-print_model_results(xgb2, X2_test, y2_test, X2.columns)
+if HAS_XGB:
+    xgb2 = XGBClassifier(random_state=42, use_label_encoder=False, eval_metric="logloss")
+    xgb2.fit(X2_tr, y2_tr)
+    print_model_results(xgb2, X2_te, y2_te, X2.columns)
+else:
+    print("\n[XGBoost not installed — skipping XGBClassifier in Stretch Task 2]")
 
 ```
 
 
-## STRETCH QUESTION|TASK 3
+## ADDITIONAL |TASK 3
 
 For this stretch question, I built a regression model to predict the year a house was built using a Random Forest Regressor. The model achieved a root mean squared error (RMSE) of about 11.6 years, meaning on average predictions were within roughly 12 years of the true build year. The median absolute error was lower, at around 3.9 years, which shows that half of the predictions were off by less than four years — a good sign that the model handles most houses reasonably well, with a few larger outliers.
 
@@ -349,58 +380,47 @@ The R² value was approximately 0.901, which means the model explained about 90%
 While the random forest did a good job predicting year built, there is room to improve by adding more external features, such as neighborhood development data or historical zoning codes, to tighten the RMSE even further. Still, this model would provide a solid starting point for helping the client estimate missing build years when needed.
 
 ```{python}
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error, r2_score, median_absolute_error
-import matplotlib.pyplot as plt
-import pandas as pd
-from sklearn.model_selection import train_test_split
-import numpy as np
+# Predict yrbuilt with a Random Forest Regressor
 
-# Load your confirmed data
-df = pd.read_csv("https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv")
+df_reg = pd.read_csv(url)
 
-# set target
-y_reg = df["yrbuilt"]
+y_reg = df_reg["yrbuilt"]
+X_reg = df_reg.drop(columns=["yrbuilt", "parcel"]).fillna(0)
 
-# drop target and identifier
-X_reg = df.drop(columns=["yrbuilt", "parcel"])
-X_reg = X_reg.fillna(0)
-
-# split
-X_train, X_test, y_train, y_test = train_test_split(
+X_train_r, X_test_r, y_train_r, y_test_r = train_test_split(
     X_reg, y_reg, test_size=0.2, random_state=42
 )
 
-# Random Forest Regressor
 rf_reg = RandomForestRegressor(n_estimators=100, random_state=42)
-rf_reg.fit(X_train, y_train)
+rf_reg.fit(X_train_r, y_train_r)
 
-# predict
-y_pred = rf_reg.predict(X_test)
+y_pred_r = rf_reg.predict(X_test_r)
 
-# evaluation
-rmse = np.sqrt(mean_squared_error(y_test, y_pred))   # fixes the error
-r2 = r2_score(y_test, y_pred)
-medae = median_absolute_error(y_test, y_pred)
+rmse = np.sqrt(mean_squared_error(y_test_r, y_pred_r))
+r2 = r2_score(y_test_r, y_pred_r)
+medae = median_absolute_error(y_test_r, y_pred_r)
 
 print(f"RMSE: {rmse:.2f}")
 print(f"R²: {r2:.3f}")
 print(f"Median Absolute Error: {medae:.2f}")
 
-# residual plot
-residuals = y_test - y_pred
-plt.scatter(y_pred, residuals)
+# Residual plot
+residuals = y_test_r - y_pred_r
+plt.figure(figsize=(7,5))
+plt.scatter(y_pred_r, residuals, alpha=0.6)
 plt.axhline(0, color="red")
 plt.xlabel("Predicted Year Built")
 plt.ylabel("Residuals")
 plt.title("Residual Plot")
+plt.tight_layout()
 plt.show()
 
-# feature importances
+# Feature importances
 pd.Series(rf_reg.feature_importances_, index=X_reg.columns).sort_values().plot(
     kind="barh", figsize=(10,12)
 )
 plt.title("Feature Importances for Year Built Regression")
 plt.tight_layout()
 plt.show()
+
 ```

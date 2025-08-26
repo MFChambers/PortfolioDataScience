@@ -1,6 +1,6 @@
 ---
 title: "Client Report - Finding Relationships in Baseball"
-subtitle: "Course DS 250"
+subtitle: "Using pandas, numpy, sqlite3, lets_plot"
 author: "[Maia Faith Chambers]"
 format:
   html:
@@ -408,4 +408,3 @@ df_avg_career = pd.read_sql_query(avg_career_query, con)
 df_avg_career
 ```
 ---
-
