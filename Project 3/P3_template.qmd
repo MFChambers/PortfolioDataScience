@@ -66,9 +66,7 @@ df.columns.to_list()
 ## Elevator pitch
 The analysis I did discovers that SLC airport had the highest proportion of delayed flights, February was the most punctual month to travel. Weather-related delays were more prevalent in late summer and winter, with SFO airport experiencing the greatest weather impact.
 
-## QUESTION|TASK 1
-
-__Fix all of the varied missing data types in the data to be consistent (all missing values should be displayed as “NaN”).__ In your report include one record example (one row) from your new data, in the raw JSON format. Your example should display the "NaN" for at least one missing value.__  
+## HANDLING MISSING DATA
 
 By replacing empty string and "999" with NaN. This standardizes the data and gets rid of placeholder values and empty strings. It also allows us to handle missing values and makes them easier to identify. The example below is a single row from the data set that has been cleaned and turned into JSON format. 
 
@@ -86,9 +84,7 @@ print(example)
 ```
 
 
-## QUESTION|TASK 2
-
-__Which airport has the worst delays?__ Describe the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours.   
+## IDENTIFYING THE WORST AIRPORTS FOR DELAYS  
 
 The proportion I used to identify the airport with worst delays is the proportion of delayed flights. This is crucial for identifying airports where delays happen often. A small airport would have fewere total minutes of delay but a very high proportion of late departures, which could still make it the "worst" from a passenger's perspective. I also used the average delay time in hours so that we can determine how severe the delays are, on average, to get an accurate depiction of airports when delays occur. A hgigher proportion of delays may indicate frequency, average delay time indicaes the intensity.
 
@@ -122,9 +118,7 @@ print(summary.head())
 
 Based on the findings, the highest proportion of delayed flights was IAD (Washington Dulles) with the worst delays, even though its a smaller airport. Passengers that fly through IAD are more likely to experience delays. If we take into account the average delay duratio, ORD (Chicago O'Hare) would be the worst airport. Suggesting that even though delays are less likely and less frequent than IAD, they are significantly longer when they do happen. IAD is the worst in frequency and ORD is the worst in severity. 
 
-## QUESTION|TASK 3
-
-__What is the best month to fly if you want to avoid delays of any length?__
+## FINDING THE BEST MONTH TO FLY TO AVOID DELAYS
 
 To identify the best month to fly, I analyzed average delay per flight by month. I chose this metric because it accounts for both the frequency and intensity of delays, rather than just whether any delay occurred. By calculating the total minutes of delay divided by the total number of flights for each airport-month, then averaging these across all airports, we get a fair comparison of punctuality month by month.
 
@@ -181,7 +175,7 @@ This metric reflects both the frequency and intensity of delays by dividing tota
 
 Note: February does not appear in the dataset, likely due to missing or incomplete data for that month.
 
-## QUESTION|TASK 4
+## MEASURING THE TRUE IMPACT OF WEATHER ON DELAYS
 
 According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories.
 
@@ -242,9 +236,7 @@ df_clean[['airport_code', 'month', 'num_of_delays_weather',
 
 
 
-## QUESTION|TASK 5
-
-__Using the new weather variable calculated above, create a barplot showing the proportion of all flights that are delayed by weather at each airport. Describe what you learn from this graph.__  
+## WEATHER DELAY PROPORTIONS BY AIRPORT
 
 This chart shows the proportion of total flights at each airport that were delayed by weather, accounting for both severe and mild delays. Airports like SFO and ORD show the highest proportions of weather-related delays. In contrast, airports such as SLC and SAN have relatively fewer weather-related delays, suggesting more stable flying conditions.
 ```{python}
@@ -282,16 +274,13 @@ ggplot(weather_summary_sorted, aes(x='airport_code', y='prop_weather_delay')) + 
 ---
 
 
-## STRETCH QUESTION|TASK 1
-
-__Which delay is the worst delay?__
+## COMPARING DELAY TYPES: WHICH IS THE WORST?
 
 The analysis shows that weather-related delays are the most significant, affecting approximately 6.5% of all flights. These delays include both severe and mild weather impacts, offering a more comprehensive view of real-world disruptions. Carrier delays, which typically stem from airline operational issues, are also notable at 3.8%. In contrast, security delays are extremely rare, impacting less than 0.1% of total flights. This comparison highlights that weather is the dominant factor in flight disruptions, both in terms of frequency and impact.
 
 
 
 ```{python}
-## STRETCH QUESTION|TASK 1
 carrier = pd.to_numeric(df_clean['num_of_delays_carrier'], errors='coerce').fillna(0).sum()
 security = pd.to_numeric(df_clean['num_of_delays_security'], errors='coerce').fillna(0).sum()
 weather = pd.to_numeric(df_clean['weather_delay_all'], errors='coerce').fillna(0).sum()
