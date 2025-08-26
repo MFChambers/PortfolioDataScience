@@ -42,10 +42,10 @@ The dataset provided contains yearly counts of baby names in the United States. 
 # Summary of overall project work. 
 
 Key deliverables included:
-*Personalization & historical context: Compared the popularity of my own name (Maia) at my birth year against its historical usage.
-*Generational inference: Examined names like Brittany, identifying sharp peaks (around 1990) that allow us to infer likely age ranges.
-*Client’s focus names: Analyzed Mary, Martha, Peter, and Paul from 1920–2000, highlighting cultural and religious trends in naming.
-*Pop culture impact: Investigated names from movies (Elsa from Frozen and Elliot from E.T.), showing clear surges in popularity following major film releases.
+Personalization & historical context: Compared the popularity of my own name (Maia) at my birth year against its historical usage.
+Generational inference: Examined names like Brittany, identifying sharp peaks (around 1990) that allow us to infer likely age ranges.
+Client’s focus names: Analyzed Mary, Martha, Peter, and Paul from 1920–2000, highlighting cultural and religious trends in naming.
+Pop culture impact: Investigated names from movies (Elsa from Frozen and Elliot from E.T.), showing clear surges in popularity following major film releases.
 
 This project demonstrates how demographic data, when paired with visualization, can answer client-driven questions, uncover cultural patterns, and tell engaging stories about history and identity.
 
