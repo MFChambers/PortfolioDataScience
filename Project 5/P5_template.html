@@ -8,7 +8,7 @@
 
 <meta name="author" content="Maia Faith Chambers">
 
-<title>Client Report - The War with Star Wars</title>
+<title>Client Report 5 - Star Wars Survey: Income Prediction &amp; Data Validation</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -3087,8 +3087,8 @@ vertical-align: -.125em;
 <header id="title-block-header" class="quarto-title-block default page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-page">
-      <div class="quarto-title-block"><div><h1 class="title">Client Report - The War with Star Wars</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> See code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
-            <p class="subtitle lead">Course DS 250</p>
+      <div class="quarto-title-block"><div><h1 class="title">Client Report 5 - Star Wars Survey: Income Prediction &amp; Data Validation</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> See code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li></ul></div></div>
+            <p class="subtitle lead">Analyzed the FiveThirtyEight Star Wars survey using Python (pandas, NumPy, scikit-learn), Matplotlib, and Quarto to validate the public dataset and predict respondent income.</p>
                       </div>
   </div>
     
@@ -3119,34 +3119,49 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
+  <li><a href="#client-request" id="toc-client-request">Client Request:</a></li>
+  <li><a href="#summary-of-overall-project-work" id="toc-summary-of-overall-project-work">Summary of overall project work</a>
+  <ul>
   <li><a href="#elevator-pitch" id="toc-elevator-pitch">Elevator pitch</a></li>
-  <li><a href="#questiontask-1" id="toc-questiontask-1">QUESTION|TASK 1</a></li>
-  <li><a href="#questiontask-2" id="toc-questiontask-2">QUESTION|TASK 2</a></li>
-  <li><a href="#questiontask-3" id="toc-questiontask-3">QUESTION|TASK 3</a></li>
-  <li><a href="#questiontask-4" id="toc-questiontask-4">QUESTION|TASK 4</a></li>
-  <li><a href="#stretch-questiontask-1" id="toc-stretch-questiontask-1">STRETCH QUESTION|TASK 1</a></li>
-  <li><a href="#stretch-questiontask-2" id="toc-stretch-questiontask-2">STRETCH QUESTION|TASK 2</a></li>
-  <li><a href="#stretch-questiontask-3" id="toc-stretch-questiontask-3">STRETCH QUESTION|TASK 3</a></li>
+  <li><a href="#data-cleaning-column-name-simplification" id="toc-data-cleaning-column-name-simplification">DATA CLEANING: COLUMN NAME SIMPLIFICATION</a></li>
+  <li><a href="#data-preparation-for-modeling" id="toc-data-preparation-for-modeling">DATA PREPARATION FOR MODELING</a></li>
+  <li><a href="#data-validation-recreating-published-visuals" id="toc-data-validation-recreating-published-visuals">DATA VALIDATION: RECREATING PUBLISHED VISUALS</a></li>
+  <li><a href="#income-prediction-with-random-forest" id="toc-income-prediction-with-random-forest">INCOME PREDICTION WITH RANDOM FOREST</a></li>
+  <li><a href="#model-tuning-improving-accuracy-beyond-65" id="toc-model-tuning-improving-accuracy-beyond-65">MODEL TUNING: Improving Accuracy Beyond 65%</a></li>
+  <li><a href="#additional-validation-gender-distribution-visual" id="toc-additional-validation-gender-distribution-visual">ADDITIONAL VALIDATION: Gender Distribution Visual</a></li>
+  <li><a href="#feature-engineering-numeric-location-encoding" id="toc-feature-engineering-numeric-location-encoding">FEATURE ENGINEERING: Numeric Location Encoding</a></li>
+  </ul></li>
   </ul>
 </nav>
-<div id="5d00ae3c" class="cell" data-execution_count="1">
+<section id="client-request" class="level2">
+<h2 class="anchored" data-anchor-id="client-request">Client Request:</h2>
+<p>The client conducted a Star Wars–themed survey and outsourced analysis. They want the data cleaned and standardized, verification that the GitHub dataset matches the original article by recreating key visuals, and a machine-learning model that predicts whether a respondent earns more than $50k. Deliverables include clear preprocessing steps, readable column names, and model performance with standard metrics.</p>
+</section>
+<section id="summary-of-overall-project-work" class="level1">
+<h1>Summary of overall project work</h1>
+<pre><code>* Data cleaning &amp; renaming: Shortened verbose survey columns; standardized categories; mapped age/education/income to numeric fields; created a binary target (&gt; $50k); one-hot encoded remaining categoricals.
+* Validation: Recreated two+ visuals from the article (viewership and character sentiment), confirming the dataset aligns with published findings.
+* Modeling: Trained a Random Forest Classifier on cleaned features; achieved ~75.7% accuracy (exceeds the 65% goal). Reported a full classification report and confusion matrix; showed stronger performance identifying high-income respondents.</code></pre>
+<p>Additional Analysis: * Tuned hyperparameters (n_estimators, max_depth) with comparable performance; added a third validation visual; encoded location numerically for modeling.</p>
+<p>Tools/Packages: pandas, NumPy, scikit-learn (RandomForestClassifier), Matplotlib, Quarto.</p>
+<p>Data hygiene notes: Avoided leakage by dropping income_num from features after creating the target; handled missing values before modeling.</p>
+<div id="d161fb79" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, classification_report, confusion_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestClassifier</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> accuracy_score, classification_report, confusion_matrix</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="elevator-pitch" class="level2">
 <h2 class="anchored" data-anchor-id="elevator-pitch">Elevator pitch</h2>
 <p>After cleaning and restructuring the Star Wars survey data, our Random Forest model achieved an accuracy of 75.7% in predicting whether respondents earn more than $50,000 per year. Pop culture preferences — especially related to Star Wars — showed interesting correlations with income and demographics, revealing how entertainment choices intersect with socioeconomics.</p>
 </section>
-<section id="questiontask-1" class="level2">
-<h2 class="anchored" data-anchor-id="questiontask-1">QUESTION|TASK 1</h2>
-<p><strong>Shorten the column names and clean them up for easier use with pandas.</strong> Provide a table or list that exemplifies how you fixed the names.</p>
+<section id="data-cleaning-column-name-simplification" class="level2">
+<h2 class="anchored" data-anchor-id="data-cleaning-column-name-simplification">DATA CLEANING: COLUMN NAME SIMPLIFICATION</h2>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 83%">
@@ -3177,21 +3192,21 @@ vertical-align: -.125em;
 </tr>
 </tbody>
 </table>
-<div id="5a5a21c9" class="cell" data-execution_count="2">
+<div id="f049ca64" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/fivethirtyeight/data/master/star-wars-survey/StarWars.csv&quot;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, encoding<span class="op">=</span><span class="st">&quot;ISO-8859-1&quot;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>rename_map <span class="op">=</span> {</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Which of the following Star Wars films have you seen? Please select all that apply.&quot;</span>: <span class="st">&quot;seen_any&quot;</span>,</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Age&quot;</span>: <span class="st">&quot;age&quot;</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Education&quot;</span>: <span class="st">&quot;education&quot;</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Household Income&quot;</span>: <span class="st">&quot;income&quot;</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.rename(columns<span class="op">=</span>rename_map)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.strip().<span class="bu">str</span>.replace(<span class="st">&quot; &quot;</span>, <span class="st">&quot;_&quot;</span>).<span class="bu">str</span>.replace(<span class="st">&quot;?&quot;</span>, <span class="st">&quot;&quot;</span>).<span class="bu">str</span>.lower()</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/fivethirtyeight/data/master/star-wars-survey/StarWars.csv&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(url, encoding<span class="op">=</span><span class="st">&quot;ISO-8859-1&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>rename_map <span class="op">=</span> {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Which of the following Star Wars films have you seen? Please select all that apply.&quot;</span>: <span class="st">&quot;seen_any&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Age&quot;</span>: <span class="st">&quot;age&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Education&quot;</span>: <span class="st">&quot;education&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Household Income&quot;</span>: <span class="st">&quot;income&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> df.rename(columns<span class="op">=</span>rename_map)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>df.columns <span class="op">=</span> df.columns.<span class="bu">str</span>.strip().<span class="bu">str</span>.replace(<span class="st">&quot; &quot;</span>, <span class="st">&quot;_&quot;</span>).<span class="bu">str</span>.replace(<span class="st">&quot;?&quot;</span>, <span class="st">&quot;&quot;</span>).<span class="bu">str</span>.lower()</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <div>
@@ -3353,79 +3368,73 @@ vertical-align: -.125em;
 </div>
 </div>
 </section>
-<section id="questiontask-2" class="level2">
-<h2 class="anchored" data-anchor-id="questiontask-2">QUESTION|TASK 2</h2>
-<p><strong>Clean and format the data so that it can be used in a machine learning model.</strong> As you format the data, you should complete each item listed below. In your final report provide example(s) of the reformatted data with a short description of the changes made.<br>
-a. Filter the dataset to respondents that have seen at least one film<br>
-a. Create a new column that converts the age ranges to a single number. Drop the age range categorical column<br>
-a. Create a new column that converts the education groupings to a single number. Drop the school categorical column<br>
-a. Create a new column that converts the income ranges to a single number. Drop the income range categorical column<br>
-a. Create your target (also known as “y” or “label”) column based on the new income range column<br>
-a. One-hot encode all remaining categorical columns</p>
-<p>The reformatted data captures not just demographic attributes like age, education, and income — but also opinions and preferences related to the Star Wars universe, along with geographic and pop culture context. This dataset provides a unique lens into how demographic traits (age, education, income) and personal interests (Star Wars fandom, film ranking, Star Trek crossover) intersect. Even within this small sample: Education and age align somewhat with income, but not always predictably. Star Wars fans in this sample are more likely to be high earners. Geographic and cultural variables are captured and ready to be tested in your machine learning model to see what really drives income predictions.</p>
-<div id="d96c7662" class="cell" data-execution_count="3">
+<section id="data-preparation-for-modeling" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation-for-modeling">DATA PREPARATION FOR MODELING</h2>
+<p>I reformatted the Star Wars survey data to make it suitable for machine learning by filtering to respondents who had seen at least one film, converting age, education, and income categories into numeric values, creating a binary target column for respondents earning more than $50k, and one-hot encoding the remaining categorical variables.</p>
+<p>The reformatted data captures not just demographic attributes like age, education, and income — but also opinions and preferences related to the Star Wars universe, along with geographic and pop culture context. This dataset provides a unique lens into how demographic traits (age, education, income) and personal interests (Star Wars fandom, film ranking, Star Trek crossover) intersect. Even within this small sample: <em>Education and age align somewhat with income, but not always predictably. </em>Star Wars fans in this sample are more likely to be high earners. *Geographic and cultural variables are captured and ready to be tested in the machine learning model to see what really drives income predictions.</p>
+<div id="f4453f5a" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df_seen <span class="op">=</span> df[df[<span class="st">&quot;seen_any&quot;</span>].notna()].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_seen <span class="op">=</span> df[df[<span class="st">&quot;seen_any&quot;</span>].notna()].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="bed4d974" class="cell" data-execution_count="4">
+<div id="db1308da" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>age_map <span class="op">=</span> {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;18-29&quot;</span>: <span class="fl">23.5</span>,</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;30-44&quot;</span>: <span class="dv">37</span>,</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;45-60&quot;</span>: <span class="dv">52</span>,</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&gt; 60&quot;</span>: <span class="dv">65</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;age_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;age&quot;</span>].<span class="bu">map</span>(age_map)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;age&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>age_map <span class="op">=</span> {</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;18-29&quot;</span>: <span class="fl">23.5</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;30-44&quot;</span>: <span class="dv">37</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;45-60&quot;</span>: <span class="dv">52</span>,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&gt; 60&quot;</span>: <span class="dv">65</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;age_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;age&quot;</span>].<span class="bu">map</span>(age_map)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;age&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="3d57ba57" class="cell" data-execution_count="5">
+<div id="12ccfef4" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>edu_map <span class="op">=</span> {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Less than high school degree&quot;</span>: <span class="dv">1</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;High school degree&quot;</span>: <span class="dv">2</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Some college or Associate degree&quot;</span>: <span class="dv">3</span>,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Bachelor degree&quot;</span>: <span class="dv">4</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Graduate degree&quot;</span>: <span class="dv">5</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;education_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;education&quot;</span>].<span class="bu">map</span>(edu_map)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;education&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-</div>
-<div id="a0fea1db" class="cell" data-execution_count="6">
-<details class="code-fold">
-<summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>income_map <span class="op">=</span> {</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Under $25,000&quot;</span>: <span class="dv">12500</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$25,000 - $49,999&quot;</span>: <span class="dv">37500</span>,</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$50,000 - $99,999&quot;</span>: <span class="dv">75000</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$100,000 - $149,999&quot;</span>: <span class="dv">125000</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$150,000+&quot;</span>: <span class="dv">175000</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>edu_map <span class="op">=</span> {</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Less than high school degree&quot;</span>: <span class="dv">1</span>,</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;High school degree&quot;</span>: <span class="dv">2</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Some college or Associate degree&quot;</span>: <span class="dv">3</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Bachelor degree&quot;</span>: <span class="dv">4</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Graduate degree&quot;</span>: <span class="dv">5</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;income_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;income&quot;</span>].<span class="bu">map</span>(income_map)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;income&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;education_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;education&quot;</span>].<span class="bu">map</span>(edu_map)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;education&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="5b99bc66" class="cell" data-execution_count="7">
+<div id="9a6ea00e" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;target&quot;</span>] <span class="op">=</span> (df_seen[<span class="st">&quot;income_num&quot;</span>] <span class="op">&gt;</span> <span class="dv">50000</span>).astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>income_map <span class="op">=</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;Under $25,000&quot;</span>: <span class="dv">12500</span>,</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$25,000 - $49,999&quot;</span>: <span class="dv">37500</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$50,000 - $99,999&quot;</span>: <span class="dv">75000</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$100,000 - $149,999&quot;</span>: <span class="dv">125000</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$150,000+&quot;</span>: <span class="dv">175000</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;income_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;income&quot;</span>].<span class="bu">map</span>(income_map)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;income&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="139807cd" class="cell" data-execution_count="8">
+<div id="46acc63f" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows with missing key data</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_seen <span class="op">=</span> df_seen.dropna(subset<span class="op">=</span>[<span class="st">&quot;age_num&quot;</span>, <span class="st">&quot;education_num&quot;</span>, <span class="st">&quot;income_num&quot;</span>, <span class="st">&quot;target&quot;</span>])</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># One-hot encode object columns</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> df_seen.select_dtypes(include<span class="op">=</span><span class="st">&quot;object&quot;</span>).columns</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>df_final <span class="op">=</span> pd.get_dummies(df_seen, columns<span class="op">=</span>categorical_cols, drop_first<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>df_final.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;target&quot;</span>] <span class="op">=</span> (df_seen[<span class="st">&quot;income_num&quot;</span>] <span class="op">&gt;</span> <span class="dv">50000</span>).astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div id="39d090f6" class="cell" data-execution_count="8">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows with missing key data</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df_seen <span class="op">=</span> df_seen.dropna(subset<span class="op">=</span>[<span class="st">&quot;age_num&quot;</span>, <span class="st">&quot;education_num&quot;</span>, <span class="st">&quot;income_num&quot;</span>, <span class="st">&quot;target&quot;</span>])</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># One-hot encode object columns</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>categorical_cols <span class="op">=</span> df_seen.select_dtypes(include<span class="op">=</span><span class="st">&quot;object&quot;</span>).columns</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>df_final <span class="op">=</span> pd.get_dummies(df_seen, columns<span class="op">=</span>categorical_cols, drop_first<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>df_final.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="8">
 <div>
@@ -3592,34 +3601,33 @@ a. One-hot encode all remaining categorical columns</p>
 <p>Each one-hot encoded column reflects a categorical feature (e.g., gender, location, preferences) as True/False binary flags.</p>
 <p>These transformations ensured that the dataset could be successfully fed into a machine learning pipeline without error, and allowed us to evaluate demographic and preference-based predictors of income with interpretable results.</p>
 </section>
-<section id="questiontask-3" class="level2">
-<h2 class="anchored" data-anchor-id="questiontask-3">QUESTION|TASK 3</h2>
-<p><strong>Validate that the data provided on GitHub lines up with the article by recreating 2 of the visuals from the article.</strong></p>
+<section id="data-validation-recreating-published-visuals" class="level2">
+<h2 class="anchored" data-anchor-id="data-validation-recreating-published-visuals">DATA VALIDATION: RECREATING PUBLISHED VISUALS</h2>
 <p>To validate the dataset against the original article, I recreated two visualizations: one showing general Star Wars viewership and another showing the most disliked characters. The first chart confirms that the vast majority of respondents have seen at least one of the six Star Wars films, while a much smaller group indicated they had not. This supports the reliability of the rest of the survey, since most participants were familiar with the franchise and could provide informed opinions. The second chart attempts to visualize which characters were viewed most unfavorably. While the underlying logic worked, the chart labels defaulted to generic terms like “Him/Her” due to long or uncleaned column names in the dataset. Nonetheless, the plot shows that respondents had strong negative reactions to at least one character—consistent with the article’s emphasis on Jar Jar Binks being widely disliked. Together, these visualizations affirm that the dataset aligns reasonably well with the original article and contains meaningful patterns in viewership and character sentiment.</p>
-<div id="c19ec3ec" class="cell" data-execution_count="9">
+<div id="5d5b0770" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to detect multiple episode-specific viewership columns</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>seen_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;have_you_seen&quot;</span> <span class="kw">in</span> col <span class="kw">and</span> <span class="st">&quot;episode&quot;</span> <span class="kw">in</span> col]</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> seen_cols:</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Count &quot;Yes&quot; responses for each movie column</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    movie_counts <span class="op">=</span> df[seen_cols].<span class="bu">apply</span>(<span class="kw">lambda</span> col: col <span class="op">==</span> <span class="st">&quot;Yes&quot;</span>).<span class="bu">sum</span>().sort_values()</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    movie_counts.plot(kind<span class="op">=</span><span class="st">&quot;barh&quot;</span>, title<span class="op">=</span><span class="st">&quot;Star Wars Movie Viewership&quot;</span>, xlabel<span class="op">=</span><span class="st">&quot;Respondents&quot;</span>)</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fallback if only the summary column exists</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    summary_col <span class="op">=</span> <span class="st">&quot;have_you_seen_any_of_the_6_films_in_the_star_wars_franchise&quot;</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> summary_col <span class="kw">in</span> df.columns:</span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        df[summary_col].value_counts().plot(</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>            kind<span class="op">=</span><span class="st">&quot;bar&quot;</span>, title<span class="op">=</span><span class="st">&quot;Seen Any Star Wars Film?&quot;</span>, ylabel<span class="op">=</span><span class="st">&quot;Respondents&quot;</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        plt.tight_layout()</span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        plt.show()</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Movie viewership columns not found.&quot;</span>)</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>([col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;seen&quot;</span> <span class="kw">in</span> col <span class="kw">or</span> <span class="st">&quot;star_wars&quot;</span> <span class="kw">in</span> col])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to detect multiple episode-specific viewership columns</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>seen_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;have_you_seen&quot;</span> <span class="kw">in</span> col <span class="kw">and</span> <span class="st">&quot;episode&quot;</span> <span class="kw">in</span> col]</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> seen_cols:</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Count &quot;Yes&quot; responses for each movie column</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    movie_counts <span class="op">=</span> df[seen_cols].<span class="bu">apply</span>(<span class="kw">lambda</span> col: col <span class="op">==</span> <span class="st">&quot;Yes&quot;</span>).<span class="bu">sum</span>().sort_values()</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    movie_counts.plot(kind<span class="op">=</span><span class="st">&quot;barh&quot;</span>, title<span class="op">=</span><span class="st">&quot;Star Wars Movie Viewership&quot;</span>, xlabel<span class="op">=</span><span class="st">&quot;Respondents&quot;</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Fallback if only the summary column exists</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    summary_col <span class="op">=</span> <span class="st">&quot;have_you_seen_any_of_the_6_films_in_the_star_wars_franchise&quot;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> summary_col <span class="kw">in</span> df.columns:</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        df[summary_col].value_counts().plot(</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>            kind<span class="op">=</span><span class="st">&quot;bar&quot;</span>, title<span class="op">=</span><span class="st">&quot;Seen Any Star Wars Film?&quot;</span>, ylabel<span class="op">=</span><span class="st">&quot;Respondents&quot;</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        plt.tight_layout()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        plt.show()</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;Movie viewership columns not found.&quot;</span>)</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>([col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;seen&quot;</span> <span class="kw">in</span> col <span class="kw">or</span> <span class="st">&quot;star_wars&quot;</span> <span class="kw">in</span> col])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -3629,38 +3637,38 @@ a. One-hot encode all remaining categorical columns</p>
 </div>
 </div>
 </div>
-<div id="d11580fe" class="cell" data-execution_count="10">
+<div id="273bd994" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find all columns related to character favorability</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>char_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;unfavorably&quot;</span> <span class="kw">in</span> col <span class="kw">or</span> <span class="st">&quot;character&quot;</span> <span class="kw">in</span> col]</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> char_cols:</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Count &quot;Very unfavorably&quot; votes across all relevant columns</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    char_votes <span class="op">=</span> df[char_cols].<span class="bu">apply</span>(<span class="kw">lambda</span> col: col.value_counts().get(<span class="st">&quot;Very unfavorably&quot;</span>, <span class="dv">0</span>))</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clean up column names into readable character names</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    clean_labels <span class="op">=</span> [</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        col.split(<span class="st">&quot;with_&quot;</span>)[<span class="op">-</span><span class="dv">1</span>].replace(<span class="st">&quot;_&quot;</span>, <span class="st">&quot; &quot;</span>).replace(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;&quot;</span>).title()</span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> col <span class="kw">in</span> char_votes.index</span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    char_votes.index <span class="op">=</span> clean_labels</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort and plot</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    char_votes.sort_values().plot(</span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>        kind<span class="op">=</span><span class="st">&quot;barh&quot;</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), title<span class="op">=</span><span class="st">&quot;Most Disliked Star Wars Characters&quot;</span>, color<span class="op">=</span><span class="st">&quot;steelblue&quot;</span></span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">&quot;Number of &#39;Very Unfavorably&#39; Votes&quot;</span>)</span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">&quot;Character&quot;</span>)</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Disliked character columns not found. The dataset version may not include them.&quot;</span>)</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Helpful debug: show star wars–related columns</span></span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;star_wars&quot;</span> <span class="kw">in</span> col])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Find all columns related to character favorability</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>char_cols <span class="op">=</span> [col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;unfavorably&quot;</span> <span class="kw">in</span> col <span class="kw">or</span> <span class="st">&quot;character&quot;</span> <span class="kw">in</span> col]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> char_cols:</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Count &quot;Very unfavorably&quot; votes across all relevant columns</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    char_votes <span class="op">=</span> df[char_cols].<span class="bu">apply</span>(<span class="kw">lambda</span> col: col.value_counts().get(<span class="st">&quot;Very unfavorably&quot;</span>, <span class="dv">0</span>))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Clean up column names into readable character names</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    clean_labels <span class="op">=</span> [</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>        col.split(<span class="st">&quot;with_&quot;</span>)[<span class="op">-</span><span class="dv">1</span>].replace(<span class="st">&quot;_&quot;</span>, <span class="st">&quot; &quot;</span>).replace(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;&quot;</span>).title()</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> col <span class="kw">in</span> char_votes.index</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    char_votes.index <span class="op">=</span> clean_labels</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sort and plot</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    char_votes.sort_values().plot(</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        kind<span class="op">=</span><span class="st">&quot;barh&quot;</span>, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">6</span>), title<span class="op">=</span><span class="st">&quot;Most Disliked Star Wars Characters&quot;</span>, color<span class="op">=</span><span class="st">&quot;steelblue&quot;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">&quot;Number of &#39;Very Unfavorably&#39; Votes&quot;</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">&quot;Character&quot;</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Disliked character columns not found. The dataset version may not include them.&quot;</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Helpful debug: show star wars–related columns</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>([col <span class="cf">for</span> col <span class="kw">in</span> df.columns <span class="cf">if</span> <span class="st">&quot;star_wars&quot;</span> <span class="kw">in</span> col])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -3674,26 +3682,25 @@ a. One-hot encode all remaining categorical columns</p>
 </div>
 </div>
 </section>
-<section id="questiontask-4" class="level2">
-<h2 class="anchored" data-anchor-id="questiontask-4">QUESTION|TASK 4</h2>
-<p><strong>Build a machine learning model that predicts whether a person makes more than $50k. Describe your model and report the accuracy.</strong></p>
+<section id="income-prediction-with-random-forest" class="level2">
+<h2 class="anchored" data-anchor-id="income-prediction-with-random-forest">INCOME PREDICTION WITH RANDOM FOREST</h2>
 <p>To predict whether a respondent earns more than $50,000 annually, I trained a Random Forest Classifier using the cleaned and preprocessed Star Wars survey dataset. The features included age, education level, income, and one-hot encoded responses to various Star Wars-related survey questions. The model achieved an accuracy of 75.71%, significantly outperforming the initial 62% estimate mentioned in the planning stage. The classification report shows a strong ability to correctly identify high-income earners (target = 1), with a precision of 0.76, recall of 0.98, and f1-score of 0.86. While the model struggles more with predicting low-income respondents (target = 0), the overall performance indicates that demographic and cultural preferences in the dataset contain meaningful patterns associated with income.</p>
-<div id="210d5acb" class="cell" data-execution_count="11">
+<div id="02bce3ab" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define features and target</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_final.drop(columns<span class="op">=</span>[<span class="st">&quot;income_num&quot;</span>, <span class="st">&quot;target&quot;</span>])</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_final[<span class="st">&quot;target&quot;</span>]</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Random Forest accuracy: </span><span class="sc">{</span>accuracy<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define features and target</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> df_final.drop(columns<span class="op">=</span>[<span class="st">&quot;income_num&quot;</span>, <span class="st">&quot;target&quot;</span>])</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> df_final[<span class="st">&quot;target&quot;</span>]</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(X, y, test_size<span class="op">=</span><span class="fl">0.3</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>model.fit(X_train, y_train)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> model.predict(X_test)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>accuracy <span class="op">=</span> accuracy_score(y_test, y_pred)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Random Forest accuracy: </span><span class="sc">{</span>accuracy<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classification_report(y_test, y_pred))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Random Forest accuracy: 75.71%
@@ -3710,37 +3717,35 @@ weighted avg       0.70      0.76      0.68       140
 </div>
 <hr>
 </section>
-<section id="stretch-questiontask-1" class="level2">
-<h2 class="anchored" data-anchor-id="stretch-questiontask-1">STRETCH QUESTION|TASK 1</h2>
-<p><strong>Build a machine learning model that predicts whether a person makes more than $50k. With accuracy of at least 65%. Describe your model and report the accuracy.</strong></p>
-<p>In Stretch Task 1, I sought to improve the model beyond 65% accuracy. By tuning hyperparameters (increasing estimators and adjusting depth), we achieved the same 75.71% accuracy on the test set, which meets and exceeds the 65% stretch goal. These results suggest that even in a culturally niche dataset like this, machine learning can effectively model real-world socioeconomic traits when survey data is properly cleaned and engineered.</p>
-<div id="6fa5eaf6" class="cell" data-execution_count="12">
+<section id="model-tuning-improving-accuracy-beyond-65" class="level2">
+<h2 class="anchored" data-anchor-id="model-tuning-improving-accuracy-beyond-65">MODEL TUNING: Improving Accuracy Beyond 65%</h2>
+<p>I sought to improve the model beyond 65% accuracy. By tuning hyperparameters (increasing estimators and adjusting depth), we achieved the same 75.71% accuracy on the test set, which meets and exceeds the 65% goal. These results suggest that even in a culturally niche dataset like this, machine learning can effectively model real-world socioeconomic traits when survey data is properly cleaned and engineered.</p>
+<div id="6a009642" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">200</span>, max_depth<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>model2.fit(X_train, y_train)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>preds2 <span class="op">=</span> model2.predict(X_test)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>acc2 <span class="op">=</span> accuracy_score(y_test, preds2)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Improved Random Forest accuracy: </span><span class="sc">{</span>acc2<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">200</span>, max_depth<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>model2.fit(X_train, y_train)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>preds2 <span class="op">=</span> model2.predict(X_test)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>acc2 <span class="op">=</span> accuracy_score(y_test, preds2)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Improved Random Forest accuracy: </span><span class="sc">{</span>acc2<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>Improved Random Forest accuracy: 75.71%</code></pre>
 </div>
 </div>
 </section>
-<section id="stretch-questiontask-2" class="level2">
-<h2 class="anchored" data-anchor-id="stretch-questiontask-2">STRETCH QUESTION|TASK 2</h2>
-<p><strong>Validate the data provided on GitHub lines up with the article by recreating a 3rd visual from the article.</strong></p>
+<section id="additional-validation-gender-distribution-visual" class="level2">
+<h2 class="anchored" data-anchor-id="additional-validation-gender-distribution-visual">ADDITIONAL VALIDATION: Gender Distribution Visual</h2>
 <p>To validate the dataset against the original article, I recreated a third visual showing the distribution of respondents by gender. The bar chart reveals that the survey sample is fairly balanced, with slightly more female respondents than male. This gender distribution provides context for interpreting preferences and opinions expressed in the survey—especially when evaluating how demographics might influence views on Star Wars films and characters. Ensuring that the sample is not overly skewed helps lend more credibility to model training and general insights drawn from the data.</p>
-<div id="e89899bc" class="cell" data-execution_count="13">
+<div id="bb1b07ab" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">&quot;gender&quot;</span> <span class="kw">in</span> df.columns:</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&quot;gender&quot;</span>].value_counts().plot(kind<span class="op">=</span><span class="st">&quot;bar&quot;</span>, title<span class="op">=</span><span class="st">&quot;Respondents by Gender&quot;</span>, ylabel<span class="op">=</span><span class="st">&quot;Count&quot;</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Gender column not found.&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">&quot;gender&quot;</span> <span class="kw">in</span> df.columns:</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    df[<span class="st">&quot;gender&quot;</span>].value_counts().plot(kind<span class="op">=</span><span class="st">&quot;bar&quot;</span>, title<span class="op">=</span><span class="st">&quot;Respondents by Gender&quot;</span>, ylabel<span class="op">=</span><span class="st">&quot;Count&quot;</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    plt.show()</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Gender column not found.&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display">
 <div>
@@ -3751,24 +3756,23 @@ weighted avg       0.70      0.76      0.68       140
 </div>
 </div>
 </section>
-<section id="stretch-questiontask-3" class="level2">
-<h2 class="anchored" data-anchor-id="stretch-questiontask-3">STRETCH QUESTION|TASK 3</h2>
-<p><strong>Create a new column that converts the location groupings to a single number. Drop the location categorical column.</strong></p>
-<p><em>type your results and analysis here</em></p>
-<div id="4d32ac48" class="cell" data-execution_count="14">
+<section id="feature-engineering-numeric-location-encoding" class="level2">
+<h2 class="anchored" data-anchor-id="feature-engineering-numeric-location-encoding">FEATURE ENGINEERING: Numeric Location Encoding</h2>
+<p>To prepare the dataset for machine learning, I converted the categorical location_(census_region) variable into a numerical format by assigning each region a unique code using pandas’ category method. This transformation allows the model to interpret geographic data in a structured, numeric form without introducing artificial ordinal relationships. The original text column was dropped after conversion to avoid redundancy. This step ensures location can now be used as a predictive feature in the model while maintaining a clean and efficient dataset structure.</p>
+<div id="5d990d69" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">&quot;location_(census_region)&quot;</span> <span class="kw">in</span> df_seen.columns:</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert location to categorical codes</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    df_seen[<span class="st">&quot;location_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;location_(census_region)&quot;</span>].astype(<span class="st">&quot;category&quot;</span>).cat.codes</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop original column</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    df_seen.drop(columns<span class="op">=</span><span class="st">&quot;location_(census_region)&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Preview result</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df_seen[[<span class="st">&quot;location_num&quot;</span>]].head())</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Location column not found.&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">&quot;location_(census_region)&quot;</span> <span class="kw">in</span> df_seen.columns:</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert location to categorical codes</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    df_seen[<span class="st">&quot;location_num&quot;</span>] <span class="op">=</span> df_seen[<span class="st">&quot;location_(census_region)&quot;</span>].astype(<span class="st">&quot;category&quot;</span>).cat.codes</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Drop original column</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    df_seen.drop(columns<span class="op">=</span><span class="st">&quot;location_(census_region)&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Preview result</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(df_seen[[<span class="st">&quot;location_num&quot;</span>]].head())</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">&quot;Location column not found.&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>    location_num
@@ -3780,6 +3784,7 @@ weighted avg       0.70      0.76      0.68       140
 </div>
 </div>
 <hr>
+</section>
 </section>
 
 </main>
