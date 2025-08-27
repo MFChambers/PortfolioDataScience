@@ -1,6 +1,6 @@
 ---
 title: "Client Report - Palmer Penguins"
-subtitle: "I explored the Palmer Penguins dataset by creating tables and visualizations from the Python for Data Science (PY4DS) textbook. The project demonstrates how to build reproducible reports, cleanly display tabular data, and use visual encodings (color, shape, smoothing lines) to highlight relationships—in this case, showing that penguins with longer flippers generally weigh more. "
+subtitle: "I explored the Palmer Penguins dataset by creating tables and visualizations from the Python for Data Science (PY4DS) textbook. The project demonstrates how to build reproducible reports, cleanly display tabular data, and use visual encodings (color, shape, smoothing lines) to highlight relationships—in this case, showing that penguins with longer flippers generally weigh more."
 author: "[Maia Faith Chambers]"
 format:
   html:
