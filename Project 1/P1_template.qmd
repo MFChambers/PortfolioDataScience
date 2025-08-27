@@ -42,6 +42,7 @@ The dataset provided contains yearly counts of baby names in the United States. 
 # Summary of overall project work. 
 
 Key deliverables included:
+
 Personalization & historical context: Compared the popularity of my own name (Maia) at my birth year against its historical usage.
 Generational inference: Examined names like Brittany, identifying sharp peaks (around 1990) that allow us to infer likely age ranges.
 Client’s focus names: Analyzed Mary, Martha, Peter, and Paul from 1920–2000, highlighting cultural and religious trends in naming.
