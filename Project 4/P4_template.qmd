@@ -128,8 +128,6 @@ plt.show()
 ```
 
 
-
-
 ## Baseline Models and Performance
 A Decision Tree Classifier was initially selected to label homes as built before or after 1980, using the features living area (livearea), number of stories (stories), and number of bathrooms (numbaths). The model was tuned with max_depth=5 and min_samples_leaf=50 to reduce overfitting while retaining interpretability for public health staff. The resulting test accuracy was approximately 78.5%, which is a solid baseline but does not meet the 90% target.
 
@@ -140,8 +138,6 @@ Logistic Regression: around 78.7% accuracy; limited by its linear nature.
 k-Nearest Neighbors (k-NN): approximately 88% accuracy, but highly sensitive to data scaling and local outliers.
 
 Random Forest: approximately 80.3% accuracy, with stronger generalization than a single tree, and offering ranked feature importances for interpretability.
-
-
 
 ```{python}
 # Features
