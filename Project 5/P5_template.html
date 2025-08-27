@@ -3145,7 +3145,7 @@ vertical-align: -.125em;
 <p>Additional Analysis: * Tuned hyperparameters (n_estimators, max_depth) with comparable performance; added a third validation visual; encoded location numerically for modeling.</p>
 <p>Tools/Packages: pandas, NumPy, scikit-learn (RandomForestClassifier), Matplotlib, Quarto.</p>
 <p>Data hygiene notes: Avoided leakage by dropping income_num from features after creating the target; handled missing values before modeling.</p>
-<div id="d161fb79" class="cell" data-execution_count="1">
+<div id="1d42a60c" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd </span>
@@ -3192,7 +3192,7 @@ vertical-align: -.125em;
 </tr>
 </tbody>
 </table>
-<div id="f049ca64" class="cell" data-execution_count="2">
+<div id="6d87d9be" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/fivethirtyeight/data/master/star-wars-survey/StarWars.csv&quot;</span></span>
@@ -3372,13 +3372,13 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="data-preparation-for-modeling">DATA PREPARATION FOR MODELING</h2>
 <p>I reformatted the Star Wars survey data to make it suitable for machine learning by filtering to respondents who had seen at least one film, converting age, education, and income categories into numeric values, creating a binary target column for respondents earning more than $50k, and one-hot encoding the remaining categorical variables.</p>
 <p>The reformatted data captures not just demographic attributes like age, education, and income — but also opinions and preferences related to the Star Wars universe, along with geographic and pop culture context. This dataset provides a unique lens into how demographic traits (age, education, income) and personal interests (Star Wars fandom, film ranking, Star Trek crossover) intersect. Even within this small sample: <em>Education and age align somewhat with income, but not always predictably. </em>Star Wars fans in this sample are more likely to be high earners. *Geographic and cultural variables are captured and ready to be tested in the machine learning model to see what really drives income predictions.</p>
-<div id="f4453f5a" class="cell" data-execution_count="3">
+<div id="b7d9f509" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df_seen <span class="op">=</span> df[df[<span class="st">&quot;seen_any&quot;</span>].notna()].copy()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="db1308da" class="cell" data-execution_count="4">
+<div id="022afdcc" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>age_map <span class="op">=</span> {</span>
@@ -3391,7 +3391,7 @@ vertical-align: -.125em;
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;age&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="12ccfef4" class="cell" data-execution_count="5">
+<div id="a37ec60f" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>edu_map <span class="op">=</span> {</span>
@@ -3405,7 +3405,7 @@ vertical-align: -.125em;
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;education&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="9a6ea00e" class="cell" data-execution_count="6">
+<div id="8907aec6" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>income_map <span class="op">=</span> {</span>
@@ -3419,13 +3419,13 @@ vertical-align: -.125em;
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>df_seen.drop(columns<span class="op">=</span><span class="st">&quot;income&quot;</span>, inplace<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="46acc63f" class="cell" data-execution_count="7">
+<div id="b26deb5c" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df_seen[<span class="st">&quot;target&quot;</span>] <span class="op">=</span> (df_seen[<span class="st">&quot;income_num&quot;</span>] <span class="op">&gt;</span> <span class="dv">50000</span>).astype(<span class="bu">int</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="39d090f6" class="cell" data-execution_count="8">
+<div id="80350ad0" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Drop rows with missing key data</span></span>
@@ -3604,7 +3604,7 @@ vertical-align: -.125em;
 <section id="data-validation-recreating-published-visuals" class="level2">
 <h2 class="anchored" data-anchor-id="data-validation-recreating-published-visuals">DATA VALIDATION: RECREATING PUBLISHED VISUALS</h2>
 <p>To validate the dataset against the original article, I recreated two visualizations: one showing general Star Wars viewership and another showing the most disliked characters. The first chart confirms that the vast majority of respondents have seen at least one of the six Star Wars films, while a much smaller group indicated they had not. This supports the reliability of the rest of the survey, since most participants were familiar with the franchise and could provide informed opinions. The second chart attempts to visualize which characters were viewed most unfavorably. While the underlying logic worked, the chart labels defaulted to generic terms like “Him/Her” due to long or uncleaned column names in the dataset. Nonetheless, the plot shows that respondents had strong negative reactions to at least one character—consistent with the article’s emphasis on Jar Jar Binks being widely disliked. Together, these visualizations affirm that the dataset aligns reasonably well with the original article and contains meaningful patterns in viewership and character sentiment.</p>
-<div id="5d5b0770" class="cell" data-execution_count="9">
+<div id="daebf1b7" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Try to detect multiple episode-specific viewership columns</span></span>
@@ -3637,7 +3637,7 @@ vertical-align: -.125em;
 </div>
 </div>
 </div>
-<div id="273bd994" class="cell" data-execution_count="10">
+<div id="73ad1dae" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -3685,7 +3685,7 @@ vertical-align: -.125em;
 <section id="income-prediction-with-random-forest" class="level2">
 <h2 class="anchored" data-anchor-id="income-prediction-with-random-forest">INCOME PREDICTION WITH RANDOM FOREST</h2>
 <p>To predict whether a respondent earns more than $50,000 annually, I trained a Random Forest Classifier using the cleaned and preprocessed Star Wars survey dataset. The features included age, education level, income, and one-hot encoded responses to various Star Wars-related survey questions. The model achieved an accuracy of 75.71%, significantly outperforming the initial 62% estimate mentioned in the planning stage. The classification report shows a strong ability to correctly identify high-income earners (target = 1), with a precision of 0.76, recall of 0.98, and f1-score of 0.86. While the model struggles more with predicting low-income respondents (target = 0), the overall performance indicates that demographic and cultural preferences in the dataset contain meaningful patterns associated with income.</p>
-<div id="02bce3ab" class="cell" data-execution_count="11">
+<div id="f7e0a88e" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># define features and target</span></span>
@@ -3720,7 +3720,7 @@ weighted avg       0.70      0.76      0.68       140
 <section id="model-tuning-improving-accuracy-beyond-65" class="level2">
 <h2 class="anchored" data-anchor-id="model-tuning-improving-accuracy-beyond-65">MODEL TUNING: Improving Accuracy Beyond 65%</h2>
 <p>I sought to improve the model beyond 65% accuracy. By tuning hyperparameters (increasing estimators and adjusting depth), we achieved the same 75.71% accuracy on the test set, which meets and exceeds the 65% goal. These results suggest that even in a culturally niche dataset like this, machine learning can effectively model real-world socioeconomic traits when survey data is properly cleaned and engineered.</p>
-<div id="6a009642" class="cell" data-execution_count="12">
+<div id="89419d04" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model2 <span class="op">=</span> RandomForestClassifier(n_estimators<span class="op">=</span><span class="dv">200</span>, max_depth<span class="op">=</span><span class="dv">10</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
@@ -3737,7 +3737,7 @@ weighted avg       0.70      0.76      0.68       140
 <section id="additional-validation-gender-distribution-visual" class="level2">
 <h2 class="anchored" data-anchor-id="additional-validation-gender-distribution-visual">ADDITIONAL VALIDATION: Gender Distribution Visual</h2>
 <p>To validate the dataset against the original article, I recreated a third visual showing the distribution of respondents by gender. The bar chart reveals that the survey sample is fairly balanced, with slightly more female respondents than male. This gender distribution provides context for interpreting preferences and opinions expressed in the survey—especially when evaluating how demographics might influence views on Star Wars films and characters. Ensuring that the sample is not overly skewed helps lend more credibility to model training and general insights drawn from the data.</p>
-<div id="bb1b07ab" class="cell" data-execution_count="13">
+<div id="20d6d67c" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">&quot;gender&quot;</span> <span class="kw">in</span> df.columns:</span>
@@ -3759,7 +3759,7 @@ weighted avg       0.70      0.76      0.68       140
 <section id="feature-engineering-numeric-location-encoding" class="level2">
 <h2 class="anchored" data-anchor-id="feature-engineering-numeric-location-encoding">FEATURE ENGINEERING: Numeric Location Encoding</h2>
 <p>To prepare the dataset for machine learning, I converted the categorical location_(census_region) variable into a numerical format by assigning each region a unique code using pandas’ category method. This transformation allows the model to interpret geographic data in a structured, numeric form without introducing artificial ordinal relationships. The original text column was dropped after conversion to avoid redundancy. This step ensures location can now be used as a predictive feature in the model while maintaining a clean and efficient dataset structure.</p>
-<div id="5d990d69" class="cell" data-execution_count="14">
+<div id="66d2358a" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="st">&quot;location_(census_region)&quot;</span> <span class="kw">in</span> df_seen.columns:</span>
