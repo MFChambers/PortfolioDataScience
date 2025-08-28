@@ -3144,7 +3144,7 @@ vertical-align: -.125em;
 <p>Additional Analysis: * Leakage check: Demonstrated why including yrbuilt inflates accuracy (near 100%) and removed it; repeated with neighborhood join to show proper handling prevents leakage. * Regression stretch: Predicted yrbuilt with a Random Forest Regressor (strong 𝑅2 and reasonable RMSE), useful for estimating missing build years.</p>
 <p>Tools/Packages: pandas, NumPy, scikit-learn (DecisionTree, RandomForest, LogisticRegression, RandomForestRegressor), Seaborn/Matplotlib, Quarto.</p>
 <p>Data hygiene notes: Removed yrbuilt and parcel from classification features to prevent leakage; if using grouped/categorical features, one-hot encode them before modeling.</p>
-<div id="605cb940" class="cell" data-execution_count="1">
+<div id="94ba85a4" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Imports</span></span>
@@ -3198,7 +3198,7 @@ vertical-align: -.125em;
 <section id="visual-signals-for-model-splits" class="level2">
 <h2 class="anchored" data-anchor-id="visual-signals-for-model-splits">Visual Signals for Model Splits</h2>
 <p>These visualizations show potential relationships that a machine learning model could use to split the data. For instance, the living area (Chart 1) suggests that post-1980 homes are generally larger. Bathroom count (Chart 2) shows a shift in distribution where newer homes more often include additional bathrooms. Lastly, stories (Chart 3) indicates that single-story homes may be more common in earlier decades. These patterns can serve as helpful split points in decision trees or contribute predictive value in models like random forests or logistic regression.</p>
-<div id="32038bd1" class="cell" data-execution_count="2">
+<div id="1dfe9c99" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chart A: Grouped bathrooms</span></span>
@@ -3218,7 +3218,7 @@ vertical-align: -.125em;
 </div>
 </div>
 </div>
-<div id="3b569a24" class="cell" data-execution_count="3">
+<div id="1fe19477" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chart B: Living area boxplot</span></span>
@@ -3238,7 +3238,7 @@ vertical-align: -.125em;
 </div>
 </div>
 </div>
-<div id="e44a328f" class="cell" data-execution_count="4">
+<div id="5e0ee4de" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Chart C: Proportional stories</span></span>
@@ -3270,7 +3270,7 @@ vertical-align: -.125em;
 <p>Logistic Regression: around 78.7% accuracy; limited by its linear nature.</p>
 <p>k-Nearest Neighbors (k-NN): approximately 88% accuracy, but highly sensitive to data scaling and local outliers.</p>
 <p>Random Forest: approximately 80.3% accuracy, with stronger generalization than a single tree, and offering ranked feature importances for interpretability.</p>
-<div id="fad6d78b" class="cell" data-execution_count="5">
+<div id="b6032178" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ---- Features / Target (numeric-only, no leakage) ----</span></span>
@@ -3292,7 +3292,7 @@ vertical-align: -.125em;
 <pre><code>((22913, 48), (22913,))</code></pre>
 </div>
 </div>
-<div id="de3ae928" class="cell" data-execution_count="6">
+<div id="c6998947" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split data</span></span>
@@ -3311,7 +3311,7 @@ vertical-align: -.125em;
 <pre><code>Decision Tree Accuracy: 87.27%</code></pre>
 </div>
 </div>
-<div id="e8ed0064" class="cell" data-execution_count="7">
+<div id="9bfefacd" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Random Forest</span></span>
@@ -3325,7 +3325,7 @@ vertical-align: -.125em;
 <pre><code>Random Forest Accuracy: 92.25%</code></pre>
 </div>
 </div>
-<div id="9c3eb93a" class="cell" data-execution_count="8">
+<div id="acb597d1" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Logistic Regression</span></span>
@@ -3347,7 +3347,7 @@ vertical-align: -.125em;
 <p>Feature importance analysis revealed that living area (livearea) was the strongest predictor of whether a home was built before or after 1980. This makes sense because homes constructed after 1980 tend to follow modern architectural trends favoring more spacious floorplans, in contrast to smaller post-war homes built before stricter asbestos regulations.</p>
 <p>The second most important feature was number of bathrooms (numbaths). Newer homes typically include more bathrooms to match contemporary expectations for convenience and functionality, making bathroom count a reliable indicator of more recent construction.</p>
 <p>The number of stories (stories) feature also contributed to the classification model, although with a lower importance score. This is still valuable because single-story homes were historically more common in earlier decades, whereas modern subdivisions often include two-story designs.</p>
-<div id="1a73a76e" class="cell" data-execution_count="9">
+<div id="617e5c62" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Decision Tree importance</span></span>
@@ -3367,7 +3367,7 @@ vertical-align: -.125em;
 </div>
 </div>
 </div>
-<div id="4057a1ab" class="cell" data-execution_count="10">
+<div id="183ed3c8" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Random Forest importance</span></span>
@@ -3394,7 +3394,7 @@ vertical-align: -.125em;
 <h2 class="anchored" data-anchor-id="evaluation-precision-recall-and-trade-offs">Evaluation: Precision, Recall, and Trade-offs</h2>
 <p>I evaluated the classification models using three common metrics: accuracy, precision, and recall. Each provides a different perspective on model performance:</p>
 <p>Accuracy measures the overall proportion of correct predictions across both classes. The Random Forest achieved approximately 80% accuracy, slightly higher than the Decision Tree (78%) and Logistic Regression (79%). However, accuracy alone can be misleading if the classes are imbalanced, which is why we also examine precision and recall.</p>
-<div id="d5be7f83" class="cell" data-execution_count="11">
+<div id="368250f1" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Decision Tree Evaluation:&quot;</span>)</span>
@@ -3417,7 +3417,7 @@ weighted avg       0.87      0.87      0.87      6874
 </div>
 </div>
 <p>Precision measures how many predicted positives were actually correct. For example, Random Forest had a precision of 0.84 for the positive (before1980) class, meaning when it predicts a home is pre-1980, it is correct 84% of the time. Precision is especially important if a false positive (wrongly classifying a newer home as old) has public health or safety consequences, such as unnecessary asbestos remediation.</p>
-<div id="aedbd24d" class="cell" data-execution_count="12">
+<div id="33e24d9c" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Random Forest Evaluation:&quot;</span>)</span>
@@ -3441,7 +3441,7 @@ weighted avg       0.92      0.92      0.92      6874
 </div>
 </div>
 <p>Recall measures how many true positives were captured among all actual positives. The Random Forest achieved a recall of 0.85 for the positive class, meaning it correctly identified 85% of homes that were truly built before 1980. High recall is crucial if you want to avoid missing any potentially hazardous homes.</p>
-<div id="46b259d7" class="cell" data-execution_count="13">
+<div id="d3795bc2" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">Logistic Regression Evaluation:&quot;</span>)</span>
@@ -3475,7 +3475,7 @@ weighted avg       0.82      0.82      0.82      6874
 <p>At first, all three models showed perfect or near-perfect accuracy, which seemed too good to be true. After checking, I realized the problem was that I had included yrbuilt as a feature, which is basically the answer to whether a house was built before 1980. Including it let the models “cheat” by memorizing the target, which is why the accuracy was 100%.</p>
 <p>Random Forest’s feature importances and XGBoost’s results both confirmed this, because yrbuilt was by far the most dominant variable. Logistic Regression showed the same thing, with a huge coefficient on yrbuilt.</p>
 <p>If yrbuilt is removed (which it should be, since you wouldn’t know it when predicting), Random Forest is still the strongest option. In earlier testing without yrbuilt, it achieved around 80% accuracy with a good balance of precision and recall. That makes it the most reliable recommendation for the client right now, with potential for improvement if more features or neighborhood data are added in the future.</p>
-<div id="558b62d0" class="cell" data-execution_count="14">
+<div id="08a203ae" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stretch Task 1 (corrected - no leakage)</span></span>
@@ -3590,8 +3590,10 @@ condition_Excel                     0.000091
 gartype_CP                          0.000063
 gartype_att/CP                      0.000022
 condition_Fair                      0.000000
-dtype: float64
-
+dtype: float64</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
 LogisticRegression Confusion Matrix:
           Pred 0  Pred 1
 Actual 0    1353     366
@@ -3728,46 +3730,46 @@ dtype: float32</code></pre>
 <p>The feature importances and coefficients confirmed this: yrbuilt was still the dominant driver in every model, overwhelming the effect of the new neighborhood variables. The added neighborhood features (like the nbhd_ variables) contributed almost nothing, showing extremely low or even zero importance scores.</p>
 <p>Because of this, the results with the merged dataset do not actually change the recommended model. If we remove yrbuilt from the features, Random Forest would still likely perform best, similar to its ~80% accuracy from earlier runs. The neighborhood features might provide a small boost if the model is properly cleaned of leakage, but on their own they did not shift the model’s decision boundaries in a meaningful way.</p>
 <p>In short, joining the neighborhood data did not meaningfully improve the models when yrbuilt was present, but could be helpful in the future if handled carefully and after removing data leakage.</p>
-<div id="bbea557a" class="cell" data-execution_count="15">
+<div id="7336db1c" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stretch Task 2 (corrected - no leakage)</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get neighborhood data from URL:</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>neigh_url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_neighborhoods_ml/dwellings_neighborhoods_ml.csv&quot;</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>dwell_url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv&quot;</span></span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>neigh <span class="op">=</span> pd.read_csv(neigh_url)</span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>dwell <span class="op">=</span> pd.read_csv(dwell_url)</span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="co"># merge</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>joined2 <span class="op">=</span> dwell.merge(neigh, on<span class="op">=</span><span class="st">&quot;parcel&quot;</span>, how<span class="op">=</span><span class="st">&quot;left&quot;</span>)</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="co"># target</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>y2 <span class="op">=</span> joined2[<span class="st">&quot;before1980&quot;</span>]</span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a><span class="co"># drop leakage columns</span></span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> joined2.drop(joined2.<span class="bu">filter</span>(regex<span class="op">=</span><span class="st">&quot;before1980|yrbuilt|parcel&quot;</span>).columns, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> X2.fillna(<span class="dv">0</span>)</span>
-<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>X2_train, X2_test, y2_train, y2_test <span class="op">=</span> train_test_split(</span>
-<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>    X2, y2, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y2, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Random Forest</span></span>
-<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>rf2 <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>rf2.fit(X2_train, y2_train)</span>
-<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>print_model_results(rf2, X2_test, y2_test, X2.columns)</span>
-<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Logistic Regression</span></span>
-<span id="cb24-30"><a href="#cb24-30" aria-hidden="true" tabindex="-1"></a>lr2 <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>)</span>
-<span id="cb24-31"><a href="#cb24-31" aria-hidden="true" tabindex="-1"></a>lr2.fit(X2_train, y2_train)</span>
-<span id="cb24-32"><a href="#cb24-32" aria-hidden="true" tabindex="-1"></a>print_model_results(lr2, X2_test, y2_test, X2.columns)</span>
-<span id="cb24-33"><a href="#cb24-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-34"><a href="#cb24-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. XGBoost</span></span>
-<span id="cb24-35"><a href="#cb24-35" aria-hidden="true" tabindex="-1"></a>xgb2 <span class="op">=</span> XGBClassifier(random_state<span class="op">=</span><span class="dv">42</span>, use_label_encoder<span class="op">=</span><span class="va">False</span>, eval_metric<span class="op">=</span><span class="st">&quot;logloss&quot;</span>)</span>
-<span id="cb24-36"><a href="#cb24-36" aria-hidden="true" tabindex="-1"></a>xgb2.fit(X2_train, y2_train)</span>
-<span id="cb24-37"><a href="#cb24-37" aria-hidden="true" tabindex="-1"></a>print_model_results(xgb2, X2_test, y2_test, X2.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Stretch Task 2 (corrected - no leakage)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># get neighborhood data from URL:</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>neigh_url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_neighborhoods_ml/dwellings_neighborhoods_ml.csv&quot;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>dwell_url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv&quot;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>neigh <span class="op">=</span> pd.read_csv(neigh_url)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>dwell <span class="op">=</span> pd.read_csv(dwell_url)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># merge</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>joined2 <span class="op">=</span> dwell.merge(neigh, on<span class="op">=</span><span class="st">&quot;parcel&quot;</span>, how<span class="op">=</span><span class="st">&quot;left&quot;</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="co"># target</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>y2 <span class="op">=</span> joined2[<span class="st">&quot;before1980&quot;</span>]</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="co"># drop leakage columns</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> joined2.drop(joined2.<span class="bu">filter</span>(regex<span class="op">=</span><span class="st">&quot;before1980|yrbuilt|parcel&quot;</span>).columns, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>X2 <span class="op">=</span> X2.fillna(<span class="dv">0</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>X2_train, X2_test, y2_train, y2_test <span class="op">=</span> train_test_split(</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    X2, y2, test_size<span class="op">=</span><span class="fl">0.2</span>, stratify<span class="op">=</span>y2, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Random Forest</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>rf2 <span class="op">=</span> RandomForestClassifier(random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>rf2.fit(X2_train, y2_train)</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>print_model_results(rf2, X2_test, y2_test, X2.columns)</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Logistic Regression</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>lr2 <span class="op">=</span> LogisticRegression(max_iter<span class="op">=</span><span class="dv">1000</span>)</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>lr2.fit(X2_train, y2_train)</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>print_model_results(lr2, X2_test, y2_test, X2.columns)</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. XGBoost</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>xgb2 <span class="op">=</span> XGBClassifier(random_state<span class="op">=</span><span class="dv">42</span>, use_label_encoder<span class="op">=</span><span class="va">False</span>, eval_metric<span class="op">=</span><span class="st">&quot;logloss&quot;</span>)</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>xgb2.fit(X2_train, y2_train)</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>print_model_results(xgb2, X2_test, y2_test, X2.columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>
@@ -3861,63 +3863,63 @@ Length: 321, dtype: float32</code></pre>
 <p>For this stretch question, I built a regression model to predict the year a house was built using a Random Forest Regressor. The model achieved a root mean squared error (RMSE) of about 11.6 years, meaning on average predictions were within roughly 12 years of the true build year. The median absolute error was lower, at around 3.9 years, which shows that half of the predictions were off by less than four years — a good sign that the model handles most houses reasonably well, with a few larger outliers.</p>
 <p>The R² value was approximately 0.901, which means the model explained about 90% of the variance in the year built. Overall, this is a strong score for a regression problem with a complex target like construction year.</p>
 <p>While the random forest did a good job predicting year built, there is room to improve by adding more external features, such as neighborhood development data or historical zoning codes, to tighten the RMSE even further. Still, this model would provide a solid starting point for helping the client estimate missing build years when needed.</p>
-<div id="eb276d7c" class="cell" data-execution_count="16">
+<div id="ced3fedc" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, r2_score, median_absolute_error</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your confirmed data</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv&quot;</span>)</span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># set target</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>y_reg <span class="op">=</span> df[<span class="st">&quot;yrbuilt&quot;</span>]</span>
-<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># drop target and identifier</span></span>
-<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>X_reg <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">&quot;yrbuilt&quot;</span>, <span class="st">&quot;parcel&quot;</span>])</span>
-<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>X_reg <span class="op">=</span> X_reg.fillna(<span class="dv">0</span>)</span>
-<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co"># split</span></span>
-<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
-<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>    X_reg, y_reg, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
-<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Random Forest Regressor</span></span>
-<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>rf_reg <span class="op">=</span> RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
-<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>rf_reg.fit(X_train, y_train)</span>
-<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="co"># predict</span></span>
-<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_reg.predict(X_test)</span>
-<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluation</span></span>
-<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred))   <span class="co"># fixes the error</span></span>
-<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r2_score(y_test, y_pred)</span>
-<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>medae <span class="op">=</span> median_absolute_error(y_test, y_pred)</span>
-<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;RMSE: </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;R²: </span><span class="sc">{</span>r2<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Median Absolute Error: </span><span class="sc">{</span>medae<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a><span class="co"># residual plot</span></span>
-<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred</span>
-<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_pred, residuals)</span>
-<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">&quot;red&quot;</span>)</span>
-<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Predicted Year Built&quot;</span>)</span>
-<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Residuals&quot;</span>)</span>
-<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Residual Plot&quot;</span>)</span>
-<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
-<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a><span class="co"># feature importances</span></span>
-<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a>pd.Series(rf_reg.feature_importances_, index<span class="op">=</span>X_reg.columns).sort_values().plot(</span>
-<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>    kind<span class="op">=</span><span class="st">&quot;barh&quot;</span>, figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">12</span>)</span>
-<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Feature Importances for Year Built Regression&quot;</span>)</span>
-<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.ensemble <span class="im">import</span> RandomForestRegressor</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error, r2_score, median_absolute_error</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your confirmed data</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4dwellings/master/data-raw/dwellings_ml/dwellings_ml.csv&quot;</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co"># set target</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>y_reg <span class="op">=</span> df[<span class="st">&quot;yrbuilt&quot;</span>]</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a><span class="co"># drop target and identifier</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>X_reg <span class="op">=</span> df.drop(columns<span class="op">=</span>[<span class="st">&quot;yrbuilt&quot;</span>, <span class="st">&quot;parcel&quot;</span>])</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>X_reg <span class="op">=</span> X_reg.fillna(<span class="dv">0</span>)</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a><span class="co"># split</span></span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>X_train, X_test, y_train, y_test <span class="op">=</span> train_test_split(</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>    X_reg, y_reg, test_size<span class="op">=</span><span class="fl">0.2</span>, random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Random Forest Regressor</span></span>
+<span id="cb28-24"><a href="#cb28-24" aria-hidden="true" tabindex="-1"></a>rf_reg <span class="op">=</span> RandomForestRegressor(n_estimators<span class="op">=</span><span class="dv">100</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb28-25"><a href="#cb28-25" aria-hidden="true" tabindex="-1"></a>rf_reg.fit(X_train, y_train)</span>
+<span id="cb28-26"><a href="#cb28-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-27"><a href="#cb28-27" aria-hidden="true" tabindex="-1"></a><span class="co"># predict</span></span>
+<span id="cb28-28"><a href="#cb28-28" aria-hidden="true" tabindex="-1"></a>y_pred <span class="op">=</span> rf_reg.predict(X_test)</span>
+<span id="cb28-29"><a href="#cb28-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-30"><a href="#cb28-30" aria-hidden="true" tabindex="-1"></a><span class="co"># evaluation</span></span>
+<span id="cb28-31"><a href="#cb28-31" aria-hidden="true" tabindex="-1"></a>rmse <span class="op">=</span> np.sqrt(mean_squared_error(y_test, y_pred))   <span class="co"># fixes the error</span></span>
+<span id="cb28-32"><a href="#cb28-32" aria-hidden="true" tabindex="-1"></a>r2 <span class="op">=</span> r2_score(y_test, y_pred)</span>
+<span id="cb28-33"><a href="#cb28-33" aria-hidden="true" tabindex="-1"></a>medae <span class="op">=</span> median_absolute_error(y_test, y_pred)</span>
+<span id="cb28-34"><a href="#cb28-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-35"><a href="#cb28-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;RMSE: </span><span class="sc">{</span>rmse<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb28-36"><a href="#cb28-36" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;R²: </span><span class="sc">{</span>r2<span class="sc">:.3f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb28-37"><a href="#cb28-37" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Median Absolute Error: </span><span class="sc">{</span>medae<span class="sc">:.2f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb28-38"><a href="#cb28-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-39"><a href="#cb28-39" aria-hidden="true" tabindex="-1"></a><span class="co"># residual plot</span></span>
+<span id="cb28-40"><a href="#cb28-40" aria-hidden="true" tabindex="-1"></a>residuals <span class="op">=</span> y_test <span class="op">-</span> y_pred</span>
+<span id="cb28-41"><a href="#cb28-41" aria-hidden="true" tabindex="-1"></a>plt.scatter(y_pred, residuals)</span>
+<span id="cb28-42"><a href="#cb28-42" aria-hidden="true" tabindex="-1"></a>plt.axhline(<span class="dv">0</span>, color<span class="op">=</span><span class="st">&quot;red&quot;</span>)</span>
+<span id="cb28-43"><a href="#cb28-43" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">&quot;Predicted Year Built&quot;</span>)</span>
+<span id="cb28-44"><a href="#cb28-44" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">&quot;Residuals&quot;</span>)</span>
+<span id="cb28-45"><a href="#cb28-45" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Residual Plot&quot;</span>)</span>
+<span id="cb28-46"><a href="#cb28-46" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb28-47"><a href="#cb28-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-48"><a href="#cb28-48" aria-hidden="true" tabindex="-1"></a><span class="co"># feature importances</span></span>
+<span id="cb28-49"><a href="#cb28-49" aria-hidden="true" tabindex="-1"></a>pd.Series(rf_reg.feature_importances_, index<span class="op">=</span>X_reg.columns).sort_values().plot(</span>
+<span id="cb28-50"><a href="#cb28-50" aria-hidden="true" tabindex="-1"></a>    kind<span class="op">=</span><span class="st">&quot;barh&quot;</span>, figsize<span class="op">=</span>(<span class="dv">10</span>,<span class="dv">12</span>)</span>
+<span id="cb28-51"><a href="#cb28-51" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-52"><a href="#cb28-52" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">&quot;Feature Importances for Year Built Regression&quot;</span>)</span>
+<span id="cb28-53"><a href="#cb28-53" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb28-54"><a href="#cb28-54" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
 <pre><code>RMSE: 11.60

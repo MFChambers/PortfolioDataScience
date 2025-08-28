@@ -3146,7 +3146,7 @@ vertical-align: -.125em;
 </ul>
 <p>Additional Analysis: * Compared delay types, revealing that weather delays dominate (6.5%), followed by carrier delays (3.8%), while security delays are negligible (&lt;0.1%). * This project demonstrates applied skills in JSON parsing, missing data treatment, feature engineering, and data visualization for real-world operational insights.</p>
 <p>Tools/Packages: SQL (sqlite3), Python (pandas, numpy), Lets-Plot</p>
-<div id="0566790e" class="cell" data-execution_count="1">
+<div id="fdbe6ec9" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
@@ -3160,7 +3160,7 @@ vertical-align: -.125em;
 </details>
 <div class="cell-output cell-output-display">
 
-            <div id="ekUSaU"></div>
+            <div id="fiMcx8"></div>
             <script type="text/javascript" data-lets-plot-script="library">
                 if(!window.letsPlotCallQueue) {
                     window.letsPlotCallQueue = [];
@@ -3184,9 +3184,9 @@ vertical-align: -.125em;
                         var div = document.createElement("div");
                         div.style.color = 'darkred';
                         div.textContent = 'Error loading Lets-Plot JS';
-                        document.getElementById("ekUSaU").appendChild(div);
+                        document.getElementById("fiMcx8").appendChild(div);
                     };
-                    var e = document.getElementById("ekUSaU");
+                    var e = document.getElementById("fiMcx8");
                     e.appendChild(script);
                 })()
             </script>
@@ -3351,7 +3351,7 @@ vertical-align: -.125em;
 </div>
 </div>
 </div>
-<div id="8df09902" class="cell" data-execution_count="2">
+<div id="9cafdd39" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html</span></span>
@@ -3388,7 +3388,7 @@ vertical-align: -.125em;
 <section id="handling-missing-data" class="level2">
 <h2 class="anchored" data-anchor-id="handling-missing-data">HANDLING MISSING DATA</h2>
 <p>By replacing empty string and “999” with NaN. This standardizes the data and gets rid of placeholder values and empty strings. It also allows us to handle missing values and makes them easier to identify. The example below is a single row from the data set that has been cleaned and turned into JSON format.</p>
-<div id="d98a773b" class="cell" data-execution_count="3">
+<div id="995afd2b" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -3429,7 +3429,7 @@ vertical-align: -.125em;
 <section id="identifying-the-worst-airports-for-delays" class="level2">
 <h2 class="anchored" data-anchor-id="identifying-the-worst-airports-for-delays">IDENTIFYING THE WORST AIRPORTS FOR DELAYS</h2>
 <p>The proportion I used to identify the airport with worst delays is the proportion of delayed flights. This is crucial for identifying airports where delays happen often. A small airport would have fewere total minutes of delay but a very high proportion of late departures, which could still make it the “worst” from a passenger’s perspective. I also used the average delay time in hours so that we can determine how severe the delays are, on average, to get an accurate depiction of airports when delays occur. A hgigher proportion of delays may indicate frequency, average delay time indicaes the intensity.</p>
-<div id="bfafa069" class="cell" data-execution_count="4">
+<div id="24f58526" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">## QUESTION|</span><span class="al">TASK</span><span class="co"> 2</span></span>
@@ -3469,7 +3469,7 @@ vertical-align: -.125em;
 <section id="finding-the-best-month-to-fly-to-avoid-delays" class="level2">
 <h2 class="anchored" data-anchor-id="finding-the-best-month-to-fly-to-avoid-delays">FINDING THE BEST MONTH TO FLY TO AVOID DELAYS</h2>
 <p>To identify the best month to fly, I analyzed average delay per flight by month. I chose this metric because it accounts for both the frequency and intensity of delays, rather than just whether any delay occurred. By calculating the total minutes of delay divided by the total number of flights for each airport-month, then averaging these across all airports, we get a fair comparison of punctuality month by month.</p>
-<div id="78e08dcf" class="cell" data-execution_count="5">
+<div id="4baf06e7" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter and clean the data</span></span>
@@ -3527,7 +3527,7 @@ vertical-align: -.125em;
 Name: month, dtype: object</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-   <div id="98YEv5"></div>
+   <div id="mALJpj"></div>
    <script type="text/javascript" data-lets-plot-script="plot">
    
    (function() {
@@ -3552,7 +3552,7 @@ Name: month, dtype: object</code></pre>
        };
    }
    
-   const containerDiv = document.getElementById("98YEv5");
+   const containerDiv = document.getElementById("mALJpj");
    let fig = null;
    
    function renderPlot() {
@@ -3655,7 +3655,7 @@ Name: month, dtype: object</code></pre>
    </script>
 </div>
 </div>
-<div id="2529f582" class="cell" data-execution_count="6">
+<div id="3ee64724" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df_clean[df_clean[<span class="st">&#39;month&#39;</span>] <span class="op">==</span> <span class="st">&#39;February&#39;</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3674,7 +3674,7 @@ Index: []</code></pre>
 <h2 class="anchored" data-anchor-id="measuring-the-true-impact-of-weather-on-delays">MEASURING THE TRUE IMPACT OF WEATHER ON DELAYS</h2>
 <p>According to the BTS website, the “Weather” category only accounts for severe weather delays. Mild weather delays are not counted in the “Weather” category, but are actually included in both the “NAS” and “Late-Arriving Aircraft” categories.</p>
 <p>This section combines delays from three sources: 100% of flights delayed due to severe weather, 30% of delays from late-arriving aircraft, and a month-based proportion of NAS delays (40% from April to August, 65% otherwise). This provides a more complete picture of how both severe and mild weather conditions contribute to flight delays. The data shows that ORD (Chicago O’Hare) experiences the highest total number of weather-related delays (4,502 flights), suggesting it is especially vulnerable to both direct and indirect weather impacts. ATL (Atlanta) also has a substantial number of delays (~3,769), driven largely by NAS-related disruptions. In contrast, airports like IAD (Washington Dulles) and SAN (San Diego) show lower weather-related delay totals, indicating they are either less exposed to disruptive weather or more resilient in handling its effects. This approach offers a more realistic view of weather’s full influence on airport performance.</p>
-<div id="b955e381" class="cell" data-execution_count="7">
+<div id="0eb3eb15" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fill missing values for the relevant columns</span></span>
@@ -3690,7 +3690,7 @@ Index: []</code></pre>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>df_clean[<span class="st">&#39;num_of_delays_late_aircraft&#39;</span>] <span class="op">=</span> df_clean[<span class="st">&#39;num_of_delays_late_aircraft&#39;</span>].fillna(late_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="3ca8da7e" class="cell" data-execution_count="8">
+<div id="3a66267d" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Map month names to numbers</span></span>
@@ -3708,7 +3708,7 @@ Index: []</code></pre>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.4</span> <span class="cf">if</span> <span class="dv">4</span> <span class="op">&lt;=</span> month_num <span class="op">&lt;=</span> <span class="dv">8</span> <span class="cf">else</span> <span class="fl">0.65</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div id="9d8296c3" class="cell" data-execution_count="9">
+<div id="fa33b46e" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Calculate combined weather delay using all rules</span></span>
@@ -3800,7 +3800,7 @@ Index: []</code></pre>
 <section id="weather-delay-proportions-by-airport" class="level2">
 <h2 class="anchored" data-anchor-id="weather-delay-proportions-by-airport">WEATHER DELAY PROPORTIONS BY AIRPORT</h2>
 <p>This chart shows the proportion of total flights at each airport that were delayed by weather, accounting for both severe and mild delays. Airports like SFO and ORD show the highest proportions of weather-related delays. In contrast, airports such as SLC and SAN have relatively fewer weather-related delays, suggesting more stable flying conditions.</p>
-<div id="b9be097f" class="cell" data-execution_count="10">
+<div id="2699cbd0" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix potential missing data</span></span>
@@ -3830,7 +3830,7 @@ Index: []</code></pre>
 <span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>    theme(axis_text_x<span class="op">=</span>element_text(size<span class="op">=</span><span class="dv">10</span>, angle<span class="op">=</span><span class="dv">45</span>, hjust<span class="op">=</span><span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-display" data-execution_count="10">
-   <div id="LvIRJQ"></div>
+   <div id="1UPlV0"></div>
    <script type="text/javascript" data-lets-plot-script="plot">
    
    (function() {
@@ -3855,7 +3855,7 @@ Index: []</code></pre>
        };
    }
    
-   const containerDiv = document.getElementById("LvIRJQ");
+   const containerDiv = document.getElementById("1UPlV0");
    let fig = null;
    
    function renderPlot() {
@@ -3967,7 +3967,7 @@ Index: []</code></pre>
 <section id="comparing-delay-types-which-is-the-worst" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-delay-types-which-is-the-worst">COMPARING DELAY TYPES: WHICH IS THE WORST?</h2>
 <p>The analysis shows that weather-related delays are the most significant, affecting approximately 6.5% of all flights. These delays include both severe and mild weather impacts, offering a more comprehensive view of real-world disruptions. Carrier delays, which typically stem from airline operational issues, are also notable at 3.8%. In contrast, security delays are extremely rare, impacting less than 0.1% of total flights. This comparison highlights that weather is the dominant factor in flight disruptions, both in terms of frequency and impact.</p>
-<div id="64c63728" class="cell" data-execution_count="11">
+<div id="7317cd0a" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>carrier <span class="op">=</span> pd.to_numeric(df_clean[<span class="st">&#39;num_of_delays_carrier&#39;</span>], errors<span class="op">=</span><span class="st">&#39;coerce&#39;</span>).fillna(<span class="dv">0</span>).<span class="bu">sum</span>()</span>
@@ -4010,7 +4010,7 @@ Index: []</code></pre>
   Security  5.006000e+03      0.000326</code></pre>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="11">
-   <div id="VYzQwK"></div>
+   <div id="SUjmJY"></div>
    <script type="text/javascript" data-lets-plot-script="plot">
    
    (function() {
@@ -4035,7 +4035,7 @@ Index: []</code></pre>
        };
    }
    
-   const containerDiv = document.getElementById("VYzQwK");
+   const containerDiv = document.getElementById("SUjmJY");
    let fig = null;
    
    function renderPlot() {
